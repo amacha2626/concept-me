@@ -11,12 +11,11 @@
       </div>
       <div class="row">
         <div class="input-field">
-          <input placeholder="Password" type="text" class="validate" v-model="password" required="required">
+          <input placeholder="Password" type="password" class="validate" v-model="password" required="required">
         </div>
       </div>
 
       <button type="submit" class="btn waves-effect waves-light">Sign In</button>
-      <div><router-link to="/signup" class="btn link-grey">Sign Up</router-link></div>
     </form>
   </div>
 </template>
@@ -30,12 +29,6 @@
         password: '',
         error: ''
       }
-    },
-    created() {
-      this.checkSignedIn()
-    },
-    updated() {
-      this.checkSignedIn()
     },
     methods: {
       signin() {
@@ -59,11 +52,6 @@
         delete localStorage.csrf
         delete localStorage.signedIn
       },
-      checkSignedIn() {
-        if (localStorage.signedIn) {
-          this.$router.replace('/')
-        }
-      }
     }
   }
 </script>

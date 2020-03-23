@@ -15,17 +15,16 @@
       </div>
       <div class="row">
         <div class="input-field">
-          <input placeholder="Password" type="text" class="validate" v-model="password" required="required">
+          <input placeholder="Password" type="password" class="validate" v-model="password" required="required">
         </div>
       </div>
       <div class="row">
         <div class="input-field">
-          <input placeholder="Password_confirmation" type="text" class="validate" v-model="password_confirmation" required="required">
+          <input placeholder="Password_confirmation" type="password" class="validate" v-model="password_confirmation" required="required">
         </div>
       </div>
 
       <button type="submit" class="btn waves-effect waves-light">Sign Up</button>
-      <div><router-link to="/signin" class="btn link-grey">Sign In</router-link></div>
     </form>
   </div>
 </template>
@@ -42,12 +41,12 @@
         error: ''
       }
     },
-    created() {
-      this.checkSignedIn()
-    },
-    updated() {
-      this.checkSignedIn()
-    },
+    // created() {
+    //   this.checkSignedIn()
+    // },
+    // updated() {
+    //   this.checkSignedIn()
+    // },
     methods: {
       signup() {
         this.$http.plain.post('/api/signup', { name: this.name, email: this.email, password: this.password, password_confirmation: this.password_confirmation })
@@ -70,11 +69,11 @@
         delete localStorage.csrf
         delete localStorage.signedIn
       },
-      checkSignedIn() {
-        if (localStorage.signedIn) {
-          this.$router.replace('/')
-        }
-      }
+      // checkSignedIn() {
+      //   if (localStorage.signedIn) {
+      //     this.$router.replace('/')
+      //   }
+      // }
     }
   }
 </script>
