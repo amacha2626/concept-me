@@ -1,31 +1,37 @@
 <template>
   <div class="posts">
-    <div class="post">
-      <img class="img-blur" src="https://images.unsplash.com/photo-1583438799820-74e5f373e175?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80">
-      <img class="main-img" src="https://images.unsplash.com/photo-1583438799820-74e5f373e175?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80">
-    </div>
-    <div class="post">
-      <img class="img-blur" src="https://images.unsplash.com/photo-1583567268794-067cbeab2394?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80">
-      <img class="main-img" src="https://images.unsplash.com/photo-1583567268794-067cbeab2394?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80">
-    </div>
-    <div class="post">
-      <img class="img-blur" src="https://images.unsplash.com/photo-1583610995939-95cd478ee11e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80">
-      <img class="main-img" src="https://images.unsplash.com/photo-1583610995939-95cd478ee11e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80">
-    </div>
-    <div class="post">
-      <img class="img-blur" src="https://images.unsplash.com/photo-1583623733237-4d5764a9dc82?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80">
-      <img class="main-img" src="https://images.unsplash.com/photo-1583623733237-4d5764a9dc82?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80">
-    </div>
-    <div class="post">
-      <img class="img-blur" src="https://images.unsplash.com/photo-1583552188819-4cab7da34a31?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80">
-      <img class="main-img" src="https://images.unsplash.com/photo-1583552188819-4cab7da34a31?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80">
-    </div>
-    <div class="post">
-      <img class="img-blur" src="https://images.unsplash.com/photo-1583550267251-5d138b0275bf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1489&q=80">
-      <img class="main-img" src="https://images.unsplash.com/photo-1583550267251-5d138b0275bf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1489&q=80">
+    <div class="post" v-for="post in posts">
+      <img class="img-blur" :src='post.image'>
+      <img class="main-img" :src='post.image'>
     </div>
   </div>
 </template>
+
+<script>
+import axios from 'axios'
+
+export default {
+  data: function() {
+    return {
+      posts: []
+    }
+  },
+  mounted: function() {
+    this.fetchPosts();
+  },
+  methods: {
+    fetchPosts() {
+      axios.get('/api/posts').then((res) => {
+        for(var i = 0; i < res.data.posts.length; i++) {
+          this.posts.push(res.data.posts[i]);
+        }
+      }, (error) => {
+        console.log(error);
+      });
+    },
+  }
+}
+</script>
 
 <style scoped>
   .posts{
