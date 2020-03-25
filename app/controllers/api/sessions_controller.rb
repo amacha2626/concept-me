@@ -12,6 +12,7 @@ class Api::SessionsController < ApplicationController
                         value: tokens[:access],
                         httponly: true,
                         secure: Rails.env.production?)
+      $signedInUser = user
       render json: { csrf: tokens[:csrf] }
     else
       not_authorized

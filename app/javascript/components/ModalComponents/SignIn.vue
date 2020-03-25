@@ -43,6 +43,7 @@
         }
         localStorage.csrf = response.data.csrf
         localStorage.signedIn = true
+        this.$store.state.user_email = this.email
         this.$store.dispatch('doFetchSignedIn')
         this.error = ''
         this.$router.replace('/')

@@ -2,7 +2,7 @@
   <div id="header">
     <header>
       <div class="header-item title">
-        <p><a href="#">CONCEPT ME</a></p>
+        <p><a href="/">CONCEPT ME</a></p>
       </div>
       <ul class="header-item menu">
         <li @click="signInShow">Sign in</li>
