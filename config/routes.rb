@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :users, only: [:index]
-    resources :posts, only: [:index]
+    resources :posts, only: [:index, :create]
     post   'signup',  controller: :users,    action: :create
     post   'signin',  controller: :sessions, action: :create
     delete 'signin', controller: :sessions, action: :destroy

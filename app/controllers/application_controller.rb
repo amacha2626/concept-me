@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
 
   private
 
-  # [current_user]メソッド追加（今後のBookデータとの関連付けに使用予定）
   def current_user
     @current_user ||= User.find(payload['user_id'])
   end
