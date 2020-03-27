@@ -17,14 +17,12 @@
           v-if="signedIn"
         >FAVORITE<hr></li>
       </ul>
-      <transition>
-        <div v-if="isActive==='1'" class="posts popular">
-          <Popular></Popular>
-        </div>
-        <div v-else-if="isActive==='2'" class="posts latest">
-          <Latest></Latest>
-        </div>
-      </transition>
+      <div v-if="isActive==='1'" class="posts popular">
+        <Popular></Popular>
+      </div>
+      <div v-else-if="isActive==='2'" class="posts latest">
+        <Latest></Latest>
+      </div>
     </div>
   </div>
 </template>

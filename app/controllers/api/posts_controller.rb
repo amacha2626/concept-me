@@ -6,6 +6,11 @@ class Api::PostsController < ApplicationController
     render 'index', formats: 'json', handlers: 'jbuilder'
   end
 
+  def show
+    @post = Post.find(params[:id])
+    render 'show', formats: 'json', handlers: 'jbuilder'
+  end
+
   def create
     @post = Post.new(post_params)
     if @post.save
@@ -18,6 +23,6 @@ class Api::PostsController < ApplicationController
   private
 
   def post_params
-    params.fetch(:post, {}).permit(:title, :image)
+    params.fetch(:post, {}).permit(:title, :image, :user_id)
   end
 end

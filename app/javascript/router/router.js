@@ -2,8 +2,9 @@ import Vue          from 'vue'
 import VueRouter    from 'vue-router'
 import SignInTop    from '../pages/SignInTop'
 import SignOutTop    from '../pages/SignOutTop'
+import Posts    from '../components/Posts'
+import ShowUser    from '../components/ShowUser'
 import store from '../store/store.js'
-
 
 
 Vue.use(VueRouter)
@@ -20,7 +21,31 @@ export default new VueRouter({
         } else {
           next('/home')
         }
-      }
+      },
+      children: [
+        {
+          path: '/',
+          component: Posts,
+          beforeEnter(to, from, next){
+            if (store.state.signedIn){
+              next();
+            } else {
+              next('/home')
+            }
+          }
+        },
+        {
+          path: '/user',
+          component: ShowUser,
+          beforeEnter(to, from, next){
+            if (store.state.signedIn){
+              next();
+            } else {
+              next('/home')
+            }
+          }
+        },
+      ]
     },
     {
       path: '/home',
@@ -29,7 +54,7 @@ export default new VueRouter({
         if (!store.state.signedIn){
           next();
         } else {
-          next('/')
+          next('/contents')
         }
       }
     },

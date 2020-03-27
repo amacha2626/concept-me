@@ -4,7 +4,7 @@
     <form class="col">
       <div class="row">
         <div class="input-field">
-          <input placeholder="Title" type="text"  v-model="post.title" required="required"></br>
+          <input placeholder="Title" type="text"  v-model="post.title" required="required"><br>
         </div>
       </div>
       <div class="row">
@@ -28,34 +28,42 @@
       return {
         post: {
           title: '',
-          image: '',
+          image: null,
+          user_id: ''
         },
         uploadedImage: '',
+        allUser: [],
+        userInfo: {},
       }
     },
     methods: {
       createPost: function () {
         if (!this.post.title) return;
-        axios.post('/api/posts', { post:this.post}).then((res) => {
-          console.log(this.post)
-          this.$router.push('/', () => {}, () => {});
+        this.post.user_id = this.userInfo.id
+        axios.post('/api/posts', { post: this.post}).then((res) => {
+          this.$router.go('/', () => {}, () => {});
         }, (error) => {
           console.log(error);
         });
       },
       handleFile: function(event){
-        const file = event.target.files|| e.dataTransfer.files;
+        const file = event.target.files;
         this.createImage(file[0])
-        this.post.image = file[0].name
-        console.log(file[0].name)
       },
       createImage(file){
         const reader = new FileReader();
         reader.onload = e => {
           this.uploadedImage = e.target.result;
+          this.post.image = this.uploadedImage
         };
         reader.readAsDataURL(file);
       },
+    },
+    created: function() {
+      axios.get(`api/users.json`).then(res => {
+        this.allUser = res.data.users;
+        this.userInfo = this.allUser.find(item => item.email === this.$store.state.user_email) 
+      });
     },
   }
 </script>

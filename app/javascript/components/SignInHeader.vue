@@ -5,7 +5,7 @@
         <p><a href="/">CONCEPT ME</a></p>
       </div>
       <ul class="header-item menu">
-        <li>{{ userInfo.name }}</li>
+        <li><router-link to="/user">{{ userInfo.name }}</router-link></li>
         <li><a href="/" @click="signOut">SignOut</a></li>
         <li @click="postShow"><i class="far fa-comment-dots"></i></li>
         <li><i class="far fa-bell"></i></li>
@@ -13,7 +13,6 @@
     </header>
     <hr class="border">
     <modal name="new-post"><NewPost></NewPost></modal>
-
   </div>
 </template>
 
