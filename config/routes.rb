@@ -2,7 +2,8 @@ Rails.application.routes.draw do
   root to: 'home#index'
 
   namespace :api do
-    resources :books, only: [:index, :show, :create, :update, :destroy]
+    resources :users, only: [:index]
+    resources :posts, only: [:index, :show, :create]
     post   'signup',  controller: :users,    action: :create
     post   'signin',  controller: :sessions, action: :create
     delete 'signin', controller: :sessions, action: :destroy

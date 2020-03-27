@@ -2,36 +2,48 @@
   <div id="header">
     <header>
       <div class="header-item title">
-        <p><a href="#">CONCEPT ME</a></p>
+        <p><a href="/">CONCEPT ME</a></p>
       </div>
       <ul class="header-item menu">
+        <li><router-link to="/user">{{ userInfo.name }}</router-link></li>
         <li><a href="/" @click="signOut">SignOut</a></li>
-        <li>User</li>
-        <li><i class="fa fa-bell"></i></li>
+        <li @click="postShow"><i class="far fa-comment-dots"></i></li>
+        <li><i class="far fa-bell"></i></li>
       </ul>
     </header>
     <hr class="border">
-
+    <modal name="new-post"><NewPost></NewPost></modal>
   </div>
 </template>
 
 <script>
+  import axios from 'axios'
   import { mapState } from 'vuex'
+  import NewPost from "./ModalComponents/NewPost.vue"
 
   export default {
+    components: {
+      NewPost,
+    },
     computed: mapState([
       'signedIn'
     ]),
+    data: function() {
+      return {
+        allUser: [],
+        userInfo: {},
+      }
+    },
+    created: function() {
+      axios.get(`api/users.json`).then(res => {
+        this.allUser = res.data.users;
+        this.userInfo = this.allUser.find(item => item.email === this.$store.state.user_email) 
+      });
+    },
     mounted: function() {
       this.$store.dispatch('doFetchSignedIn')
     },
     methods: {
-      signUpShow: function(){
-        this.$modal.show("signUp");
-      },
-      signInShow: function(){
-        this.$modal.show("signIn");
-      },
       signOut() {
         this.$http.secured.delete(`/api/signin`)
           .then(response => {
@@ -39,6 +51,9 @@
             delete localStorage.signedIn
           })
           .catch(error => this.setError(error, 'Cannot sign out'))
+      },
+      postShow() {
+        this.$modal.show("new-post");
       }
     }
   }

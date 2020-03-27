@@ -1,7 +1,7 @@
 <template>
   <div>
     <SignInHeader></SignInHeader>
-    <Posts class="posts"></Posts>
+    <router-view></router-view>
     <Footer></Footer>
   </div>
 </template>
@@ -39,7 +39,7 @@
 </script>
 
 <style scoped>
-  .posts{
+  .contents{
     padding-top:100px;
   }
 </style>

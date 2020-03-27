@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from "vuex-persistedstate";
 import router from '../router/router.js'
 import axios from 'axios'
 
@@ -8,6 +9,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     signedIn: '', 
+    user_email: ''
   },
   mutations: {
     fetchSignedIn(state) {
@@ -17,5 +19,6 @@ export default new Vuex.Store({
   actions: {    doFetchSignedIn({ commit }) {
       commit('fetchSignedIn')
     }
-  }
+  },
+  plugins: [createPersistedState()],
 })
