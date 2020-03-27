@@ -1,31 +1,47 @@
 <template>
   <div class="posts">
-    <div class="post">
-      <img class="img-blur" src="https://images.unsplash.com/photo-1583438799820-74e5f373e175?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80">
-      <img class="main-img" src="https://images.unsplash.com/photo-1583438799820-74e5f373e175?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80">
+    <div class="post" v-for="(post, key) in posts" :key='key' @click="postShow(post.id)">
+      <img class="img-blur" :src='post.image'>
+      <img class="main-img" :src='post.image'>
     </div>
-    <div class="post">
-      <img class="img-blur" src="https://images.unsplash.com/photo-1583567268794-067cbeab2394?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80">
-      <img class="main-img" src="https://images.unsplash.com/photo-1583567268794-067cbeab2394?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80">
-    </div>
-    <div class="post">
-      <img class="img-blur" src="https://images.unsplash.com/photo-1583610995939-95cd478ee11e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80">
-      <img class="main-img" src="https://images.unsplash.com/photo-1583610995939-95cd478ee11e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80">
-    </div>
-    <div class="post">
-      <img class="img-blur" src="https://images.unsplash.com/photo-1583623733237-4d5764a9dc82?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80">
-      <img class="main-img" src="https://images.unsplash.com/photo-1583623733237-4d5764a9dc82?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80">
-    </div>
-    <div class="post">
-      <img class="img-blur" src="https://images.unsplash.com/photo-1583552188819-4cab7da34a31?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80">
-      <img class="main-img" src="https://images.unsplash.com/photo-1583552188819-4cab7da34a31?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80">
-    </div>
-    <div class="post">
-      <img class="img-blur" src="https://images.unsplash.com/photo-1583550267251-5d138b0275bf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1489&q=80">
-      <img class="main-img" src="https://images.unsplash.com/photo-1583550267251-5d138b0275bf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1489&q=80">
-    </div>
+    <modal name="show-post" height="70%" width="30%"><ShowPost :id="post_id"></ShowPost></modal>
   </div>
 </template>
+
+<script>
+import axios from 'axios'
+import ShowPost from '../ModalComponents/ShowPost.vue'
+
+export default {
+  components: {
+    ShowPost,
+  },
+  data: function() {
+    return {
+      posts: [],
+      post_id: ''
+    }
+  },
+  mounted: function() {
+    this.fetchPosts();
+  },
+  methods: {
+    fetchPosts() {
+      axios.get('/api/posts').then(res => {
+        for(var i = 0; i < res.data.posts.length; i++) {
+          this.posts.push(res.data.posts[i]);
+        }
+      }, (error) => {
+        console.log(error);
+      });
+    },
+    postShow(key){
+      this.post_id = key
+      this.$modal.show("show-post")
+    }
+  }
+}
+</script>
 
 <style scoped>
   .posts{
@@ -64,4 +80,37 @@
     bottom: 0;
     margin: auto;
   }
+
+  .post::before, .post::after {
+  content: '';
+  position: absolute;
+  transition: all 0.3s;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.post::before {
+  left: 4px;
+  z-index: 1;
+  opacity: 0;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1, 0.1);
+}
+
+.post:hover::before {
+  opacity: 1;
+  transform: scale(1, 1);
+}
+
+.post::after {
+  transition: all 0.3s;
+}
+
+.post:hover::after {
+  transform: scale(.1, 1);
+  opacity: 0;
+}
 </style>
