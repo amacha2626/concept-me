@@ -34,7 +34,7 @@
           })
           .catch(error => this.setError(error, 'Cannot sign out'))
       }
-    }
+    },
   }
 </script>
 

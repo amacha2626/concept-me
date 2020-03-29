@@ -65,7 +65,7 @@ export default {
     }
   },
   computed: mapState([
-      'signedIn'
+    'signedIn'
   ])
 }
 </script>
