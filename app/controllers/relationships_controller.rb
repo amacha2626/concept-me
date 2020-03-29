@@ -1,9 +1,14 @@
 class RelationshipsController < ApplicationController
-  protect_from_forgery :except => [:create, :destroy]
+  protect_from_forgery :except => [:index, :show, :create, :destroy]
 
   def index
     @relationships = Relationship.all
     render 'index', formats: 'json', handlers: 'jbuilder'
+  end
+
+  def show
+    @relationship = Relationship.find(user_id: params[:id])
+    render 'show', formats: 'json', handlers: 'jbuilder'
   end
 
   def create

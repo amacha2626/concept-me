@@ -1,6 +1,6 @@
 <template>
   <div class="posts">
-    <div class="post" v-for="(post, key) in posts" :key='key' @click="postShow(post.id)">
+    <div class="post" v-for="(post, key) in reversePosts" :key='key' @click="postShow(post.id)">
       <img class="img-blur" :src='post.image'>
       <img class="main-img" :src='post.image'>
     </div>
@@ -12,6 +12,7 @@
 import axios from 'axios'
 import ShowPost from '../ModalComponents/ShowPost.vue'
 
+
 export default {
   components: {
     ShowPost,
@@ -19,26 +20,36 @@ export default {
   data: function() {
     return {
       posts: [],
-      post_id: ''
+      post_id: '',
+      allFavorite: [],
+      allUsers: [],
+      userInfo: {}
     }
   },
   mounted: function() {
-    this.fetchPosts();
-    this.posts.sort((a, b) => a.post_likes.length - b.post_likes.length)
+    axios.get(`/likes.json`).then(res => {
+      this.allFavorite = res.data.likes
+      console.log(this.allFavorite)
+      axios.get(`api/users.json`).then(res => {
+        this.allUsers = res.data.users;
+        this.userInfo = this.allUsers.find(item => item.email === this.$store.state.user_email) 
+        for(var i = 0; i < this.allFavorite.length; i++){
+          if(this.allFavorite[i].user_id === this.userInfo.id){
+            this.posts.push(this.allFavorite[i].post)
+          }
+        }
+      })
+    })
   },
   methods: {
-    fetchPosts() {
-      axios.get('/api/posts').then(res => {
-        for(var i = 0; i < res.data.posts.length; i++) {
-          this.posts.push(res.data.posts[i]);
-        }
-      }, (error) => {
-        console.log(error);
-      });
-    },
     postShow(key){
       this.post_id = key
       this.$modal.show("show-post")
+    }
+  },
+  computed: {
+    reversePosts() {
+      return this.posts.slice().reverse();
     }
   }
 }
@@ -60,6 +71,8 @@ export default {
     height: 300px;
     position:relative;
     margin: 0 auto;
+    cursor: pointer;
+
   }
 
   .img-blur{
