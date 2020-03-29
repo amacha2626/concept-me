@@ -12,7 +12,7 @@
             LATEST<hr></li>
         <li
           v-if="signedIn"
-        >FOLLOWER<hr></li>
+        >FOLLOW<hr></li>
         <li
           v-if="signedIn"
         >FAVORITE<hr></li>
@@ -49,7 +49,7 @@ export default {
     }
   },
   computed: mapState([
-      'signedIn'
+    'signedIn'
   ])
 }
 </script>

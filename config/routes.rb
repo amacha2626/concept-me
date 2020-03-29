@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   root to: 'home#index'
 
+  resources :relationships, only: [:index, :create, :destroy]
   namespace :api do
     resources :users, only: [:index]
     resources :posts, only: [:index, :show, :create]
