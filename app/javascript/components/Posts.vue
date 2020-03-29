@@ -12,16 +12,28 @@
             LATEST<hr></li>
         <li
           v-if="signedIn"
-        >FOLLOWER<hr></li>
+          @click="isSelect('3')"
+            v-bind:class="{'post-active': isActive === '3'}"
+            class="follow">
+        FOLLOW<hr></li>
         <li
           v-if="signedIn"
-        >FAVORITE<hr></li>
+          @click="isSelect('4')"
+            v-bind:class="{'post-active': isActive === '4'}"
+            class="follow">
+        FAVORITE<hr></li>
       </ul>
-      <div v-if="isActive==='1'" class="posts popular">
+      <div v-if="isActive==='1'" class="posts">
         <Popular></Popular>
       </div>
-      <div v-else-if="isActive==='2'" class="posts latest">
+      <div v-else-if="isActive==='2'" class="posts">
         <Latest></Latest>
+      </div>
+      <div v-else-if="isActive==='3'" class="posts">
+        <follow></follow>
+      </div>
+      <div v-else-if="isActive==='4'" class="posts">
+        <Favorite></Favorite>
       </div>
     </div>
   </div>
@@ -32,11 +44,15 @@ import { mapState } from 'vuex'
 
 import Popular from "./PostComponents/Popular.vue"
 import Latest from "./PostComponents/Latest.vue"
+import Follow from "./PostComponents/Follow.vue"
+import Favorite from "./PostComponents/Favorite.vue"
 
 export default {
   components: {
     Popular,
     Latest,
+    Follow,
+    Favorite,
   },
   data: function(){
     return {
