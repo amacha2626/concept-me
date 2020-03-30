@@ -4,7 +4,7 @@
       <img class="img-blur" :src='post.image'>
       <img class="main-img" :src='post.image'>
     </div>
-    <modal name="show-post" height="70%" width="30%"><ShowPost :id="post_id"></ShowPost></modal>
+    <modal name="show-post" height="auto"><ShowPost :id="post_id"></ShowPost></modal>
   </div>
 </template>
 

@@ -1,21 +1,17 @@
 <template>
   <div class="container">
-    <h1 class="#f3e5f5 purple lighten-5 center">投稿</h1>
     <form class="col">
-      <div class="row">
-        <div class="input-field">
-          <input placeholder="Title" type="text"  v-model="post.title" required="required"><br>
-        </div>
+      <div class="input-field">
+        <label>
+          <input type="file" @change="handleFile" required="required" class="image-form" >
+          <img :src="uploadedImage" class="uploadedImage">
+        </label>
       </div>
-      <div class="row">
-        <div class="input-field">
-          <label>
-            <input type="file" @change="handleFile" required="required" class="image-form" >
-            <img :src="uploadedImage" class="uploadedImage">
-          </label>
-        </div>
+      <div class="input-title">
+        <input class="title" placeholder="Title" type="text"  v-model="post.title" required="required"><br>
       </div>
-      <div class="btn btn-info waves-effect waves-light" @click="createPost">登録</div>
+      <hr>
+      <div class="post-btn" @click="createPost">POST</div>
     </form>
   </div>
 </template>
@@ -69,12 +65,32 @@
 </script>
 
 <style scoped>
+  .container{
+    padding: 20px;
+  }
+
   .uploadedImage{
-    height: 100px;
-    width: 100px;
+    height: 300px;
+    width: 300px;
   }
 
   .image-form{
     display: none;
+  }
+
+  .title{
+    width: 294px;
+    margin-top: 10px;
+  }
+
+  .post-btn{
+    margin: 0 auto;
+    margin-top:10px;
+    border:1px solid #696969;
+    width: 50px;
+    font-size:15px;
+    text-align: center;
+    padding: 5px;
+    cursor: pointer;
   }
 </style>

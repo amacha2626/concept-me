@@ -12,7 +12,7 @@
       </ul>
     </header>
     <hr class="border">
-    <modal name="new-post"><NewPost></NewPost></modal>
+    <modal name="new-post" height="auto" width="340px"><NewPost></NewPost></modal>
   </div>
 </template>
 
@@ -49,6 +49,9 @@
           .then(response => {
             delete localStorage.csrf
             delete localStorage.signedIn
+            delete localStorage.Vuex
+            this.$store.dispatch('doDeleteEmail')
+            this.$router.go('/')
           })
           .catch(error => this.setError(error, 'Cannot sign out'))
       },

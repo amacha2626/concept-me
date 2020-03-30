@@ -1,12 +1,17 @@
 <template>
-  <div>
-    <p>{{ postInfo.title }}</p>
-    <img :src="postInfo.image" class="showImage">
-    <p>{{postInfo.user_name}}</p>
-    <button v-if="!currentUser && !followOfState" @click="follow">Follow</button>
-    <button v-if="!currentUser && followOfState" @click="unfollow">UnFollow</button>
-    <i v-if="!currentUser && !favoriteOfState" @click="isFavorite" class="far fa-heart"></i>
-    <i v-if="!currentUser && favoriteOfState" @click="removeFavorite" class="fas fa-heart"></i>
+  <div class="post-wrapper">
+    <div class="image">
+      <img :src="postInfo.image" class="showImage">
+    </div>
+    <p class="title">{{ postInfo.title }}</p>
+    <hr>
+    <p class="user-name">{{postInfo.user_name}}</p>
+    <div v-if="signedIn" class="btn">
+      <button v-if="!currentUser && !followOfState" @click="follow" class="follow">Follow</button>
+      <button v-if="!currentUser && followOfState" @click="unfollow" class="follow">UnFollow</button>
+      <i v-if="!currentUser && !favoriteOfState" @click="isFavorite" class="far fa-heart unfav"></i>
+      <i v-if="!currentUser && favoriteOfState" @click="removeFavorite" class="fas fa-heart fav"></i>
+    </div>
   </div>
 </template>
 
@@ -28,6 +33,7 @@
         followData: null,
         favoriteOfState: false,
         favoriteData: null,
+        signedIn: localStorage.signedIn
       }
     },
     created: function(){
@@ -90,9 +96,46 @@
 </script>
 
 <style scoped>
+  .post-wrapper{
+    padding: 20px;
+  }
+
+  .image{
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+  }
+
   .showImage{
-    width: 300px;
-    height: 300px;
+    width: 70%;
     object-fit: contain;
+    margin: 0 auto;
+    padding: 5px;
+    border: 1px solid #696969;
+    display: inline-block;
+  }
+
+  .title{
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .user-name{
+    text-align: center;
+    margin-bottom:10px;
+  }
+
+  .btn{
+    text-align: center;
+  }
+
+  .follow{
+    width: 100px;
+    margin-right: 10px;
+  }
+
+  .fav{
+    color: rgb(253, 108, 108);
   }
 </style>

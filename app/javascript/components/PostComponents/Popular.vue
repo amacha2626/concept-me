@@ -4,7 +4,7 @@
       <img class="img-blur" :src='post.image'>
       <img class="main-img" :src='post.image'>
     </div>
-    <modal name="show-post" height="70%" width="30%"><ShowPost :id="post_id"></ShowPost></modal>
+    <modal name="show-post" height="auto"><ShowPost :id="post_id"></ShowPost></modal>
   </div>
 </template>
 
@@ -23,19 +23,11 @@ export default {
     }
   },
   mounted: function() {
-    this.fetchPosts();
-    this.posts.sort((a, b) => a.post_likes.length - b.post_likes.length)
+    axios.get('/api/posts').then(res => {
+      this.posts = res.data.posts.sort((a, b) => b.post_likes.length - a.post_likes.length)
+    });
   },
   methods: {
-    fetchPosts() {
-      axios.get('/api/posts').then(res => {
-        for(var i = 0; i < res.data.posts.length; i++) {
-          this.posts.push(res.data.posts[i]);
-        }
-      }, (error) => {
-        console.log(error);
-      });
-    },
     postShow(key){
       this.post_id = key
       this.$modal.show("show-post")

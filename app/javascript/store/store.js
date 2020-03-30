@@ -13,9 +13,16 @@ export default new Vuex.Store({
     fetchSignedIn(state) {
       state.signedIn = !!localStorage.signedIn
     },
+    deleteEmail(state){
+      state.user_email = ''
+    }
   },
-  actions: {    doFetchSignedIn({ commit }) {
+  actions: {
+    doFetchSignedIn({ commit }) {
       commit('fetchSignedIn')
+    },
+    doDeleteEmail({ commit }) {
+      commit('deleteEmail')
     }
   },
   plugins: [createPersistedState()],
