@@ -55,7 +55,7 @@ export default {
     margin-top: 50px;
     margin-bottom: 50px;
     display:grid;
-    grid-template-rows: 400px;
+    grid-auto-rows: 400px;
     grid-template-columns: 1fr 1fr 1fr;
     justify-content: center;
   }
@@ -66,7 +66,6 @@ export default {
     position:relative;
     margin: 0 auto;
     cursor: pointer;
-
   }
 
   .img-blur{

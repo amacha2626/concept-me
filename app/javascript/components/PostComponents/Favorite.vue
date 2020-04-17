@@ -32,7 +32,7 @@ export default {
       console.log(this.allFavorite)
       axios.get(`api/users.json`).then(res => {
         this.allUsers = res.data.users;
-        this.userInfo = this.allUsers.find(item => item.email === this.$store.state.user_email) 
+        this.userInfo = this.allUsers.find(item => item.email === atob(this.$store.state.user_email)) 
         for(var i = 0; i < this.allFavorite.length; i++){
           if(this.allFavorite[i].user_id === this.userInfo.id){
             this.posts.push(this.allFavorite[i].post)
@@ -61,7 +61,7 @@ export default {
     margin-top: 50px;
     margin-bottom: 50px;
     display:grid;
-    grid-template-rows: 400px;
+    grid-auto-rows: 400px;
     grid-template-columns: 1fr 1fr 1fr;
     justify-content: center;
   }
@@ -72,7 +72,6 @@ export default {
     position:relative;
     margin: 0 auto;
     cursor: pointer;
-
   }
 
   .img-blur{

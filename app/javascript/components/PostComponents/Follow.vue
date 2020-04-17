@@ -29,11 +29,14 @@ export default {
   created: function() {
     axios.get(`api/users.json`).then(res => {
       this.allUser = res.data.users;
-      this.userInfo = this.allUser.find(item => item.email === this.$store.state.user_email) 
+      this.userInfo = this.allUser.find(item => item.email === atob(this.$store.state.user_email)) 
         axios.get(`/relationships.json`).then(response => {
           this.allRelation = response.data.relationships
+          console.log(this.userInfo)
           for(var i = 0; i < this.allRelation.length; i++) {
-            this.currentUserRelationImage.push(this.allRelation[i].follow_post);
+            if(this.allRelation[i].user_id === this.userInfo.id){
+              this.currentUserRelationImage.push(this.allRelation[i].follow_post);
+            }
           }
           this.posts = this.currentUserRelationImage.flat()
         })
@@ -54,7 +57,7 @@ export default {
     margin-top: 50px;
     margin-bottom: 50px;
     display:grid;
-    grid-template-rows: 400px;
+    grid-auto-rows: 400px;
     grid-template-columns: 1fr 1fr 1fr;
     justify-content: center;
   }

@@ -37,7 +37,7 @@
     created: function() {
       axios.get(`api/users.json`).then(res => {
         this.allUser = res.data.users;
-        this.userInfo = this.allUser.find(item => item.email === this.$store.state.user_email) 
+        this.userInfo = this.allUser.find(item => item.email === atob(this.$store.state.user_email)) 
       });
     },
     mounted: function() {
@@ -51,7 +51,7 @@
             delete localStorage.signedIn
             delete localStorage.Vuex
             this.$store.dispatch('doDeleteEmail')
-            this.$router.go('/')
+            this.$router.go('/home')
           })
           .catch(error => this.setError(error, 'Cannot sign out'))
       },

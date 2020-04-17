@@ -27,7 +27,7 @@
           image: null,
           user_id: ''
         },
-        uploadedImage: '',
+        uploadedImage: 'assets/photo3.png',
         allUser: [],
         userInfo: {},
       }
@@ -72,6 +72,8 @@
   .uploadedImage{
     height: 300px;
     width: 300px;
+    border:1px dashed #696969;
+    object-fit: contain;
   }
 
   .image-form{

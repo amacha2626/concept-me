@@ -42,4 +42,8 @@
   .contents{
     padding-top:100px;
   }
+
+  footer{
+    
+  }
 </style>

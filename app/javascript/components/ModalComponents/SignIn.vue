@@ -1,22 +1,21 @@
 <template>
   <div class="container">
-    <h1 class="#f3e5f5 purple lighten-5 center">Sign In</h1>
-    <form class="col" @submit.prevent="signin">
-      <div class="text-red" v-if="error">{{ error }}</div>
-
-      <div class="row">
-        <div class="input-field">
-          <input placeholder="Email" type="text" class="validate" v-model="email" required="required">
+    <div class="signin-form">
+      <h1>Sign In</h1>
+      <hr>
+      <form @submit.prevent="signin">
+        <div v-if="error">{{ error }}</div>
+        <div>
+          <p>Email</p>
+          <input class="input-form" placeholder="Email" type="text" v-model="email" required="required">
         </div>
-      </div>
-      <div class="row">
-        <div class="input-field">
-          <input placeholder="Password" type="password" class="validate" v-model="password" required="required">
+        <div>
+          <p>Password</p>
+          <input class="input-form" placeholder="Password" type="password" v-model="password" required="required">
         </div>
-      </div>
-
-      <button type="submit" class="btn waves-effect waves-light">Sign In</button>
-    </form>
+        <button type="submit">Sign In</button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -43,7 +42,7 @@
         }
         localStorage.csrf = response.data.csrf
         localStorage.signedIn = true
-        this.$store.state.user_email = this.email
+        this.$store.state.user_email = btoa(this.email)
         this.$store.dispatch('doFetchSignedIn')
         this.error = ''
         this.$router.replace('/')
@@ -56,3 +55,23 @@
     }
   }
 </script>
+
+<style scoped>
+  .container{
+    width: 260px;
+    padding: 20px;
+  }
+
+  .signin-form{
+    text-align: center;
+  }
+
+  .input-form{
+    margin-top: 5px;
+    margin-bottom: 15px;
+  }
+
+  p{
+    letter-spacing: .05em;
+  }
+</style>

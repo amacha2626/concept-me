@@ -1,31 +1,28 @@
 <template>
   <div class="container">
-    <h1 class="#f3e5f5 purple lighten-5 center">Sign UP</h1>
-    <form class="col" @submit.prevent="signup">
-      <div class="text-red" v-if="error">{{ error }}</div>
-      <div class="row">
-        <div class="input-field">
+    <div class="signup-form">
+      <h1>Sign UP</h1>
+      <hr>
+      <form @submit.prevent="signup">
+        <div v-if="error">{{ error }}</div>
+        <div class="input-form">
+          <p>Name</p>
           <input placeholder="Name" type="text" class="validate" v-model="name" required="required"></br>
         </div>
-      </div>
-      <div class="row">
-        <div class="input-field">
+        <div class="input-form">
+          <p>Email</p>
           <input placeholder="Email" type="text" class="validate" v-model="email" required="required">
         </div>
-      </div>
-      <div class="row">
-        <div class="input-field">
+        <div class="input-form">
+          <p>Password</p>
           <input placeholder="Password" type="password" class="validate" v-model="password" required="required">
         </div>
-      </div>
-      <div class="row">
-        <div class="input-field">
+        <div class="input-form">
           <input placeholder="Password_confirmation" type="password" class="validate" v-model="password_confirmation" required="required">
         </div>
-      </div>
-
-      <button type="submit" class="btn waves-effect waves-light">Sign Up</button>
-    </form>
+        <button type="submit">Sign Up</button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -41,12 +38,6 @@
         error: ''
       }
     },
-    // created() {
-    //   this.checkSignedIn()
-    // },
-    // updated() {
-    //   this.checkSignedIn()
-    // },
     methods: {
       signup() {
         this.$http.plain.post('/api/signup', { name: this.name, email: this.email, password: this.password, password_confirmation: this.password_confirmation })
@@ -60,6 +51,7 @@
         }
         localStorage.csrf = response.data.csrf
         localStorage.signedIn = true
+        this.$store.state.user_email = btoa(this.email)
         this.$store.dispatch('doFetchSignedIn')
         this.error = ''
         this.$router.replace('/')
@@ -69,11 +61,26 @@
         delete localStorage.csrf
         delete localStorage.signedIn
       },
-      // checkSignedIn() {
-      //   if (localStorage.signedIn) {
-      //     this.$router.replace('/')
-      //   }
-      // }
     }
   }
 </script>
+
+<style scoped>
+  .container{
+    width: 260px;
+    padding: 20px;
+  }
+
+  .signup-form{
+    text-align: center;
+  }
+
+  .input-form{
+    margin-top:5px;
+    margin-bottom: 15px;
+  }
+
+  p{
+    letter-spacing: .05em;
+  }
+</style>

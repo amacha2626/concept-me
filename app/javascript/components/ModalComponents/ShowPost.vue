@@ -39,27 +39,29 @@
     created: function(){
       axios.get(`/api/posts/${this.id}.json`).then(res => {
         this.postInfo = res.data;
-        axios.get(`api/users.json`).then(res => {
-          this.allUser = res.data.users;
-          this.userInfo = this.allUser.find(item => item.email === this.$store.state.user_email) 
-          if(this.postInfo.user_id == this.userInfo.id){
-            this.currentUser = true
-          }
-          axios.get(`/relationships.json`).then(res => {
-            this.allRelationships = res.data.relationships
-            this.followData = this.allRelationships.find(item => item.user_id === this.userInfo.id && item.follow_id === this.postInfo.user_id)
-            if( this.followData ){
-              this.followOfState = true
+        if(localStorage.signedIn){
+          axios.get(`api/users.json`).then(res => {
+            this.allUser = res.data.users;
+            this.userInfo = this.allUser.find(item => item.email === atob(this.$store.state.user_email)) 
+            if(this.postInfo.user_id == this.userInfo.id){
+              this.currentUser = true
             }
-          })
-          axios.get(`/likes.json`).then(res => {
-            this.allFavorite = res.data.likes
-            this.favoriteData = this.allFavorite.find(item => item.user_id === this.userInfo.id && item.post_id === this.postInfo.id)
-            if( this.favoriteData ){
-              this.favoriteOfState = true
-            }
-          })
-        });
+            axios.get(`/relationships.json`).then(res => {
+              this.allRelationships = res.data.relationships
+              this.followData = this.allRelationships.find(item => item.user_id === this.userInfo.id && item.follow_id === this.postInfo.user_id)
+              if( this.followData ){
+                this.followOfState = true
+              }
+            })
+            axios.get(`/likes.json`).then(res => {
+              this.allFavorite = res.data.likes
+              this.favoriteData = this.allFavorite.find(item => item.user_id === this.userInfo.id && item.post_id === this.postInfo.id)
+              if( this.favoriteData ){
+                this.favoriteOfState = true
+              }
+            })
+          });
+        }
       })
     },
     methods: {

@@ -42,7 +42,7 @@ export default {
     margin-top: 50px;
     margin-bottom: 50px;
     display:grid;
-    grid-template-rows: 400px;
+    grid-auto-rows: 400px;
     grid-template-columns: 1fr 1fr 1fr;
     justify-content: center;
   }
@@ -52,6 +52,7 @@ export default {
     height: 300px;
     position:relative;
     margin: 0 auto;
+    cursor: pointer;
   }
 
   .img-blur{
@@ -105,5 +106,15 @@ export default {
   .post:hover::after {
     transform: scale(.1, 1);
     opacity: 0;
+  }
+
+  .fade-enter, .fade-leave-to{
+    opacity: 0;
+  }
+  .fade-enter-active{
+    transition: opacity 1s;
+  }
+  .fade-leave-active{
+    transition: opacity .3s;
   }
 </style>
