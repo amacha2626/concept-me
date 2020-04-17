@@ -7,11 +7,11 @@
       <ul class="header-item menu">
         <li @click="signInShow">Sign in</li>
         <li @click="signUpShow">Sign up</li>
-        <li>Guest</li>
+        <li @click="guestSignin">Guest</li>
       </ul>
     </header>
-    <modal name="signUp" height="70%" width="30%"><SignUp></SignUp></modal>
-    <modal name="signIn" height="60%" width="30%"><SignIn></SignIn></modal>
+    <modal name="signUp" height="auto" width="300px"><SignUp></SignUp></modal>
+    <modal name="signIn" height="auto" width="300px"><SignIn></SignIn></modal>
   </div>
 </template>
 
@@ -30,6 +30,28 @@
       },
       signInShow: function(){
         this.$modal.show("signIn");
+      },
+      guestSignin() {
+        this.$http.plain.post('/api/signin', { email: 'example@example.com', password: 'foobar' })
+          .then(response => this.signinSuccessful(response))
+          .catch(error => this.signinFailed(error))
+      },
+      signinSuccessful(response) {
+        if (!response.data.csrf) {
+          this.signinFailed(response)
+          return
+        }
+        localStorage.csrf = response.data.csrf
+        localStorage.signedIn = true
+        this.$store.state.user_email = btoa('example@example.com')
+        this.$store.dispatch('doFetchSignedIn')
+        this.error = ''
+        this.$router.replace('/')
+      },
+      signinFailed(error) {
+        this.error = (error.response && error.response.data && error.response.data.error) || ''
+        delete localStorage.csrf
+        delete localStorage.signedIn
       },
     }
   }

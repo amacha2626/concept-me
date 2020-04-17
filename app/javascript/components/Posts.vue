@@ -2,27 +2,28 @@
   <div class="contents">
     <div>
       <ul class="menu contents-menu">
-        <li @click="isSelect('1')"
-            v-bind:class="{'post-active': isActive === '1'}"
+        <li @click="isSelect('Popular')"
+            :class="{'post-active': activeComponent === 'Popular'}"
             class="popular">
             POPULAR<hr></li>
-        <li @click="isSelect('2')"
-            v-bind:class="{'post-active': isActive === '2'}"
+        <li @click="isSelect('Latest')"
+            :class="{'post-active': activeComponent === 'Latest'}"
             class="latest">
             LATEST<hr></li>
-        <li
-          v-if="signedIn"
-        >FOLLOWER<hr></li>
-        <li
-          v-if="signedIn"
-        >FAVORITE<hr></li>
+        <li v-if="signedIn"
+            @click="isSelect('Follow')"
+            :class="{'post-active': activeComponent === 'Follow'}"
+            class="follow">
+            FOLLOW<hr></li>
+        <li v-if="signedIn"
+            @click="isSelect('Favorite')"
+            :class="{'post-active': activeComponent === 'Favorite'}"
+            class="follow">
+            FAVORITE<hr></li>
       </ul>
-      <div v-if="isActive==='1'" class="posts popular">
-        <Popular></Popular>
-      </div>
-      <div v-else-if="isActive==='2'" class="posts latest">
-        <Latest></Latest>
-      </div>
+      <transition name="fade" mode="out-in">
+        <component :is="activeComponent"></component>
+      </transition>
     </div>
   </div>
 </template>
@@ -30,26 +31,35 @@
 <script>
 import { mapState } from 'vuex'
 
-import Popular from "./PostComponents/Popular.vue"
-import Latest from "./PostComponents/Latest.vue"
+// import Popular from "./PostComponents/Popular.vue"
+// import Latest from "./PostComponents/Latest.vue"
+// import Follow from "./PostComponents/Follow.vue"
+// import Favorite from "./PostComponents/Favorite.vue"
+
+const Popular = () => import("./PostComponents/Popular.vue")
+const Latest = () => import("./PostComponents/Latest.vue")
+const Follow = () => import("./PostComponents/Follow.vue")
+const Favorite = () => import("./PostComponents/Favorite.vue")
 
 export default {
   components: {
     Popular,
     Latest,
+    Follow,
+    Favorite,
   },
   data: function(){
     return {
-      isActive: "1"
+      activeComponent: "Popular"
     }
   },
   methods: {
-    isSelect: function(num){
-      this.isActive = num;
+    isSelect: function(component){
+      this.activeComponent = component;
     }
   },
   computed: mapState([
-      'signedIn'
+    'signedIn'
   ])
 }
 </script>
@@ -79,6 +89,16 @@ export default {
 
   .menu .post-active{
     color:#696969;
+  }
+
+  .fade-enter, .fade-leave-to{
+    opacity: 0;
+  }
+  .fade-enter-active{
+    transition: opacity 1s;
+  }
+  .fade-leave-active{
+    transition: opacity .3s;
   }
 
 </style>

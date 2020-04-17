@@ -18,13 +18,28 @@ export default {
   },
   data: function() {
     return {
+      allUser: [],
+      userInfo: {},
+      allRelation: [],
+      currentUserRelationImage: [],
       posts: [],
       post_id: ''
     }
   },
-  mounted: function() {
-    axios.get('/api/posts').then(res => {
-      this.posts = res.data.posts.sort((a, b) => b.post_likes.length - a.post_likes.length)
+  created: function() {
+    axios.get(`api/users.json`).then(res => {
+      this.allUser = res.data.users;
+      this.userInfo = this.allUser.find(item => item.email === atob(this.$store.state.user_email)) 
+        axios.get(`/relationships.json`).then(response => {
+          this.allRelation = response.data.relationships
+          console.log(this.userInfo)
+          for(var i = 0; i < this.allRelation.length; i++) {
+            if(this.allRelation[i].user_id === this.userInfo.id){
+              this.currentUserRelationImage.push(this.allRelation[i].follow_post);
+            }
+          }
+          this.posts = this.currentUserRelationImage.flat()
+        })
     });
   },
   methods: {
@@ -52,7 +67,6 @@ export default {
     height: 300px;
     position:relative;
     margin: 0 auto;
-    cursor: pointer;
   }
 
   .img-blur{
@@ -76,45 +90,35 @@ export default {
   }
 
   .post::before, .post::after {
-    content: '';
-    position: absolute;
-    transition: all 0.3s;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-  }
+  content: '';
+  position: absolute;
+  transition: all 0.3s;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
 
-  .post::before {
-    left: 4px;
-    z-index: 1;
-    opacity: 0;
-    background: rgba(255, 255, 255, 0.3);
-    transform: scale(1, 0.1);
-  }
+.post::before {
+  left: 4px;
+  z-index: 1;
+  opacity: 0;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1, 0.1);
+}
 
-  .post:hover::before {
-    opacity: 1;
-    transform: scale(1, 1);
-  }
+.post:hover::before {
+  opacity: 1;
+  transform: scale(1, 1);
+}
 
-  .post::after {
-    transition: all 0.3s;
-  }
+.post::after {
+  transition: all 0.3s;
+}
 
-  .post:hover::after {
-    transform: scale(.1, 1);
-    opacity: 0;
-  }
-
-  .fade-enter, .fade-leave-to{
-    opacity: 0;
-  }
-  .fade-enter-active{
-    transition: opacity 1s;
-  }
-  .fade-leave-active{
-    transition: opacity .3s;
-  }
+.post:hover::after {
+  transform: scale(.1, 1);
+  opacity: 0;
+}
 </style>

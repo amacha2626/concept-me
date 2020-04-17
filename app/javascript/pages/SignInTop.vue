@@ -34,12 +34,16 @@
           })
           .catch(error => this.setError(error, 'Cannot sign out'))
       }
-    }
+    },
   }
 </script>
 
 <style scoped>
   .contents{
     padding-top:100px;
+  }
+
+  footer{
+    
   }
 </style>

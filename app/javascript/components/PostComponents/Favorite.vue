@@ -20,22 +20,28 @@ export default {
   data: function() {
     return {
       posts: [],
-      post_id: ''
+      post_id: '',
+      allFavorite: [],
+      allUsers: [],
+      userInfo: {}
     }
   },
   mounted: function() {
-    this.fetchPosts();
+    axios.get(`/likes.json`).then(res => {
+      this.allFavorite = res.data.likes
+      console.log(this.allFavorite)
+      axios.get(`api/users.json`).then(res => {
+        this.allUsers = res.data.users;
+        this.userInfo = this.allUsers.find(item => item.email === atob(this.$store.state.user_email)) 
+        for(var i = 0; i < this.allFavorite.length; i++){
+          if(this.allFavorite[i].user_id === this.userInfo.id){
+            this.posts.push(this.allFavorite[i].post)
+          }
+        }
+      })
+    })
   },
   methods: {
-    fetchPosts() {
-      axios.get('/api/posts').then((res) => {
-        for(var i = 0; i < res.data.posts.length; i++) {
-          this.posts.push(res.data.posts[i]);
-        }
-      }, (error) => {
-        console.log(error);
-      });
-    },
     postShow(key){
       this.post_id = key
       this.$modal.show("show-post")
@@ -121,4 +127,3 @@ export default {
     opacity: 0;
   }
 </style>
-

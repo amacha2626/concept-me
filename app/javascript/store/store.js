@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from "vuex-persistedstate";
-import router from '../router/router.js'
-import axios from 'axios'
 
 Vue.use(Vuex)
 
@@ -15,9 +13,16 @@ export default new Vuex.Store({
     fetchSignedIn(state) {
       state.signedIn = !!localStorage.signedIn
     },
+    deleteEmail(state){
+      state.user_email = ''
+    }
   },
-  actions: {    doFetchSignedIn({ commit }) {
+  actions: {
+    doFetchSignedIn({ commit }) {
       commit('fetchSignedIn')
+    },
+    doDeleteEmail({ commit }) {
+      commit('deleteEmail')
     }
   },
   plugins: [createPersistedState()],
