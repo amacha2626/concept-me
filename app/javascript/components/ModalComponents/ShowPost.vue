@@ -1,16 +1,32 @@
 <template>
-  <div class="post-wrapper">
-    <div class="image">
-      <img :src="postInfo.image" class="showImage">
-    </div>
-    <p class="title">{{ postInfo.title }}</p>
-    <hr>
-    <p class="user-name">{{postInfo.user_name}}</p>
-    <div v-if="signedIn" class="btn">
-      <button v-if="!currentUser && !followOfState" @click="follow" class="follow">Follow</button>
-      <button v-if="!currentUser && followOfState" @click="unfollow" class="follow">UnFollow</button>
-      <i v-if="!currentUser && !favoriteOfState" @click="isFavorite" class="far fa-heart unfav"></i>
-      <i v-if="!currentUser && favoriteOfState" @click="removeFavorite" class="fas fa-heart fav"></i>
+  <div>
+    <div class="post-wrapper">
+      <div class="image">
+        <img :src="postInfo.image" class="showImage">
+      </div>
+      <p class="title">{{ postInfo.title }}</p>
+      <hr>
+      <p class="user-name">{{postInfo.user_name}}</p>
+      <div v-if="signedIn" class="btn">
+        <button v-if="!currentUser && !followOfState" @click="follow" class="follow">Follow</button>
+        <button v-if="!currentUser && followOfState" @click="unfollow" class="follow">UnFollow</button>
+        <i v-if="!currentUser && !favoriteOfState" @click="isFavorite" class="far fa-heart unfav"></i>
+        <i v-if="!currentUser && favoriteOfState" @click="removeFavorite" class="fas fa-heart fav"></i>
+      </div>
+      <div class="comments">
+        <hr>
+        <div class="comment" v-for="(comment, key) in comments" :key='key'>
+          {{ comment.comment_user.name }}
+          {{ comment.comment_content }}
+          <hr>
+        </div>
+        <form @submit.prevent v-if="signedIn && !currentUser">
+          <div class="comment-form">
+            <input v-model="comment" type="text" placeholder="comment..." class="comment-input">
+            <input @click="postComment" type="submit" value="Post" class="comment-submit">
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -33,12 +49,15 @@
         followData: null,
         favoriteOfState: false,
         favoriteData: null,
-        signedIn: localStorage.signedIn
+        signedIn: localStorage.signedIn,
+        comments: [],
+        comment: '',
       }
     },
     created: function(){
       axios.get(`/api/posts/${this.id}.json`).then(res => {
         this.postInfo = res.data;
+        this.comments = this.postInfo.comments
         if(localStorage.signedIn){
           axios.get(`api/users.json`).then(res => {
             this.allUser = res.data.users;
@@ -93,6 +112,11 @@
           this.favoriteOfState = false
         })
       },
+      postComment(){
+        axios.post(`/api/comments`, {comment: { content: this.comment, user_id: this.userInfo.id, post_id: this.id }}).then(res => {
+          
+        })
+      }
     }
   }
 </script>
@@ -139,5 +163,33 @@
 
   .fav{
     color: rgb(253, 108, 108);
+  }
+
+  .comments{
+    width: 80%;
+    margin: 0 auto;
+    font-size: 15px;
+  }
+
+  .comment-form{
+    position: relative;
+    padding-bottom:20px;
+  }
+
+  .comment-input{
+    width: 100%;
+    float:left;
+    height: 20px;
+  }
+
+  .comment-submit{
+    position: absolute;
+    float: right;
+    right:0;
+    top:3px;
+    border: none;
+  }
+  .comment-submit:focus{
+    outline: 0;
   }
 </style>
