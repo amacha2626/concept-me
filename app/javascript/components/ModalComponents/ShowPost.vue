@@ -17,10 +17,12 @@
         <hr>
         <div class="comment" v-for="(comment, key) in comments" :key='key'>
           {{ comment.comment_user.name }}
+          -
           {{ comment.comment_content }}
+          <span class="delete" @click="deleteComment(comment.comment_id)" v-if="userInfo.id === comment.comment_user.id">×</span>
           <hr>
         </div>
-        <form @submit.prevent v-if="signedIn && !currentUser">
+        <form @submit.prevent v-if="signedIn">
           <div class="comment-form">
             <input v-model="comment" type="text" placeholder="comment..." class="comment-input">
             <input @click="postComment" type="submit" value="Post" class="comment-submit">
@@ -85,7 +87,7 @@
     },
     methods: {
       follow(){
-        axios.post(`/relationships`, { user_id: this.userInfo.id, follow_id: this.postInfo.user_id}).then((res) => {
+        axios.post(`/relationships`, {user_id: this.userInfo.id, follow_id: this.postInfo.user_id}).then((res) => {
           this.followOfState = true
         })
       },
@@ -99,7 +101,9 @@
         })
       },
       isFavorite() {
-        axios.post(`/likes`, {post_id: this.postInfo.id, user_id: this.userInfo.id}).then((res) => {
+        axios.post(`/likes`, {
+                    post_id: this.postInfo.id, user_id: this.userInfo.id,
+                    visited_id: this.postInfo.user_id,}).then((res) => {
           this.favoriteOfState = true
         })
       },
@@ -113,8 +117,25 @@
         })
       },
       postComment(){
-        axios.post(`/api/comments`, {comment: { content: this.comment, user_id: this.userInfo.id, post_id: this.id }}).then(res => {
-          
+        axios.post(`/api/comments`,{
+                    comment: { content: this.comment, user_id: this.userInfo.id, post_id: this.id },
+                    visitor_id: this.postInfo.user_id, visited_id: this.userInfo.id, post_id: this.postInfo.id}).then(res => {
+          axios.get(`/api/posts/${this.id}.json`).then(res => {
+            this.postInfo = res.data;
+            this.comments = this.postInfo.comments
+            this.comment = ''
+          })
+        })
+      },
+      deleteComment(comment_id){
+        axios.delete(`/api/comments/${comment_id}`).then(res => {
+          var comments = this.comments
+          comments.some(function(value,index){
+            if (value.comment_id === comment_id){
+              comments.splice(index, 1)
+            }
+          })
+          this.comments = comments
         })
       }
     }
@@ -124,6 +145,9 @@
 <style scoped>
   .post-wrapper{
     padding: 20px;
+    max-height: 80vh;
+    scroll-behavior: auto;
+    overflow: scroll;
   }
 
   .image{
@@ -171,21 +195,26 @@
     font-size: 15px;
   }
 
+  .delete{
+    float: right;
+  }
+
   .comment-form{
     position: relative;
     padding-bottom:20px;
   }
 
   .comment-input{
-    width: 100%;
+    width: calc(100% - 6px);
     float:left;
     height: 20px;
+    margin-bottom: 20px;
   }
 
   .comment-submit{
     position: absolute;
     float: right;
-    right:0;
+    right:5px;
     top:3px;
     border: none;
   }

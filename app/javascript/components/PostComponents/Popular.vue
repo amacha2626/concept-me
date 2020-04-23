@@ -4,7 +4,7 @@
       <img class="img-blur" :src='post.image'>
       <img class="main-img" :src='post.image'>
     </div>
-    <modal name="show-post" height="auto"><ShowPost :id="post_id"></ShowPost></modal>
+    <modal name="show-post" height="auto" :scrollable='true'><ShowPost :id="post_id"></ShowPost></modal>
   </div>
 </template>
 
@@ -117,4 +117,5 @@ export default {
   .fade-leave-active{
     transition: opacity .3s;
   }
+  
 </style>
