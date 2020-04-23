@@ -98,7 +98,7 @@ export default {
     transition: opacity 1s;
   }
   .fade-leave-active{
-    transition: opacity .3s;
+    transition: opacity .2s;
   }
 
 </style>

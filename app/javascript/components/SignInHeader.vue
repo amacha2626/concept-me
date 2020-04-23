@@ -7,8 +7,12 @@
       <ul class="header-item menu">
         <li><router-link to="/user">{{ userInfo.name }}</router-link></li>
         <li><a href="/" @click="signOut">SignOut</a></li>
-        <li @click="postShow"><i class="far fa-comment-dots"></i></li>
-        <li><i class="far fa-bell"></i></li>
+        <li><i @click="postShow" class="far fa-comment-dots"></i></li>
+        <li>
+          <i @click="showNotification = !showNotification" class="far fa-bell">
+            <i v-if="!checkedNotification" class="fa fa-circle"></i>
+          </i>
+        </li>
       </ul>
     </header>
     <hr class="border">
@@ -32,12 +36,19 @@
       return {
         allUser: [],
         userInfo: {},
+        notifications: [],
+        checkedNotification: '',
+        showNotification: 'false'
       }
     },
     created: function() {
       axios.get(`api/users.json`).then(res => {
         this.allUser = res.data.users;
         this.userInfo = this.allUser.find(item => item.email === atob(this.$store.state.user_email)) 
+        axios.get(`/api/users/${this.userInfo.id}/notification`).then(res => {
+          this.notifications = res.data.notifications;
+          this.checkedNotification = this.notifications.some(value => value.checked)
+        })
       });
     },
     mounted: function() {
@@ -90,17 +101,38 @@
   .menu{
     display:flex;
     list-style-type: none;
-    padding-right: 20%
+    padding-right: 20%;
   }
 
   .menu li{
     margin-left: 30px;
-    cursor: pointer;
   }
 
   a{
     text-decoration: none;
     color: #696969;
+  }
+
+  i{
+    padding: 5px;
+    cursor: pointer;
+  }
+
+  .fa-bell{
+    position: relative;
+    top: 0;
+    right: 0;
+  }
+
+  .fa-circle{
+    color: red;
+    border: 1px solid white;
+    border-radius: 50%;
+    font-size: 1px;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
   
 </style>
