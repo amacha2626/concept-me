@@ -8,11 +8,11 @@
         <li><router-link to="/user">{{ userInfo.name }}</router-link></li>
         <li><a href="/" @click="signOut">SignOut</a></li>
         <li><i @click="postShow" class="far fa-comment-dots"></i></li>
-        <li>
-          <i @click="showNotification = !showNotification" class="far fa-bell">
+        <li class="notification-list">
+          <i v-click-outside="hide" @click="showNotification = !showNotification" class="far fa-bell">
             <i v-if="!checkedNotification" class="fa fa-circle"></i>
-            <div v-if="showNotification" class="notifications-wrapper"><p>dog</p></div>
           </i>
+          <div v-if="showNotification" class="notifications-wrapper"><p>dog</p></div>
         </li>
       </ul>
     </header>
@@ -25,6 +25,7 @@
   import axios from 'axios'
   import { mapState } from 'vuex'
   import NewPost from "./ModalComponents/NewPost.vue"
+  import ClickOutside from 'vue-click-outside'
 
   export default {
     components: {
@@ -54,6 +55,7 @@
     },
     mounted: function() {
       this.$store.dispatch('doFetchSignedIn')
+      this.popupItem = this.$el
     },
     methods: {
       signOut() {
@@ -69,7 +71,13 @@
       },
       postShow() {
         this.$modal.show("new-post");
+      },
+      hide(){
+        this.showNotification = false
       }
+    },
+    directives: {
+      ClickOutside
     }
   }
 </script>
@@ -136,12 +144,15 @@
     right: 0;
   }
 
+  .notification-list{
+    position: relative;
+  }
+
   .notifications-wrapper{
     position: absolute;
     background-color: #fff;
     height: 500px;
     width: 200px;
-    top: 50px;
     left: 0;
     border: 1px solid #696969;
     border-radius: 10px;
