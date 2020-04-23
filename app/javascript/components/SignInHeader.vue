@@ -11,6 +11,7 @@
         <li>
           <i @click="showNotification = !showNotification" class="far fa-bell">
             <i v-if="!checkedNotification" class="fa fa-circle"></i>
+            <div v-if="showNotification" class="notifications-wrapper"><p>dog</p></div>
           </i>
         </li>
       </ul>
@@ -38,7 +39,7 @@
         userInfo: {},
         notifications: [],
         checkedNotification: '',
-        showNotification: 'false'
+        showNotification: false,
       }
     },
     created: function() {
@@ -133,6 +134,17 @@
     position: absolute;
     top: 0;
     right: 0;
+  }
+
+  .notifications-wrapper{
+    position: absolute;
+    background-color: #fff;
+    height: 500px;
+    width: 200px;
+    top: 50px;
+    left: 0;
+    border: 1px solid #696969;
+    border-radius: 10px;
   }
   
 </style>
