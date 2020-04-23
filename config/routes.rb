@@ -4,8 +4,13 @@ Rails.application.routes.draw do
   resources :relationships, only: [:index, :show, :create, :destroy]
   resources :likes, only: [:index, :create, :destroy]
   namespace :api do
-    resources :users, only: [:index]
+    resources :users, only: [:index] do
+      member do
+        get 'notification', controller: :notifications, action: :index
+      end
+    end
     resources :posts, only: [:index, :show, :create]
+    resources :comments, only: [:create, :destroy]
     post   'signup',  controller: :users,    action: :create
     post   'signin',  controller: :sessions, action: :create
     delete 'signin', controller: :sessions, action: :destroy

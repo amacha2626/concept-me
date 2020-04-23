@@ -1,16 +1,34 @@
 <template>
-  <div class="post-wrapper">
-    <div class="image">
-      <img :src="postInfo.image" class="showImage">
-    </div>
-    <p class="title">{{ postInfo.title }}</p>
-    <hr>
-    <p class="user-name">{{postInfo.user_name}}</p>
-    <div v-if="signedIn" class="btn">
-      <button v-if="!currentUser && !followOfState" @click="follow" class="follow">Follow</button>
-      <button v-if="!currentUser && followOfState" @click="unfollow" class="follow">UnFollow</button>
-      <i v-if="!currentUser && !favoriteOfState" @click="isFavorite" class="far fa-heart unfav"></i>
-      <i v-if="!currentUser && favoriteOfState" @click="removeFavorite" class="fas fa-heart fav"></i>
+  <div>
+    <div class="post-wrapper">
+      <div class="image">
+        <img :src="postInfo.image" class="showImage">
+      </div>
+      <p class="title">{{ postInfo.title }}</p>
+      <hr>
+      <p class="user-name">{{postInfo.user_name}}</p>
+      <div v-if="signedIn" class="btn">
+        <button v-if="!currentUser && !followOfState" @click="follow" class="follow">Follow</button>
+        <button v-if="!currentUser && followOfState" @click="unfollow" class="follow">UnFollow</button>
+        <i v-if="!currentUser && !favoriteOfState" @click="isFavorite" class="far fa-heart unfav"></i>
+        <i v-if="!currentUser && favoriteOfState" @click="removeFavorite" class="fas fa-heart fav"></i>
+      </div>
+      <div class="comments">
+        <hr>
+        <div class="comment" v-for="(comment, key) in comments" :key='key'>
+          {{ comment.comment_user.name }}
+          -
+          {{ comment.comment_content }}
+          <span class="delete" @click="deleteComment(comment.comment_id)" v-if="userInfo.id === comment.comment_user.id">×</span>
+          <hr>
+        </div>
+        <form @submit.prevent v-if="signedIn">
+          <div class="comment-form">
+            <input v-model="comment" type="text" placeholder="comment..." class="comment-input">
+            <input @click="postComment" type="submit" value="Post" class="comment-submit">
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -33,12 +51,15 @@
         followData: null,
         favoriteOfState: false,
         favoriteData: null,
-        signedIn: localStorage.signedIn
+        signedIn: localStorage.signedIn,
+        comments: [],
+        comment: '',
       }
     },
     created: function(){
       axios.get(`/api/posts/${this.id}.json`).then(res => {
         this.postInfo = res.data;
+        this.comments = this.postInfo.comments
         if(localStorage.signedIn){
           axios.get(`api/users.json`).then(res => {
             this.allUser = res.data.users;
@@ -66,7 +87,7 @@
     },
     methods: {
       follow(){
-        axios.post(`/relationships`, { user_id: this.userInfo.id, follow_id: this.postInfo.user_id}).then((res) => {
+        axios.post(`/relationships`, {user_id: this.userInfo.id, follow_id: this.postInfo.user_id}).then((res) => {
           this.followOfState = true
         })
       },
@@ -80,7 +101,9 @@
         })
       },
       isFavorite() {
-        axios.post(`/likes`, {post_id: this.postInfo.id, user_id: this.userInfo.id}).then((res) => {
+        axios.post(`/likes`, {
+                    post_id: this.postInfo.id, user_id: this.userInfo.id,
+                    visited_id: this.postInfo.user_id,}).then((res) => {
           this.favoriteOfState = true
         })
       },
@@ -93,6 +116,28 @@
           this.favoriteOfState = false
         })
       },
+      postComment(){
+        axios.post(`/api/comments`,{
+                    comment: { content: this.comment, user_id: this.userInfo.id, post_id: this.id },
+                    visitor_id: this.postInfo.user_id, visited_id: this.userInfo.id, post_id: this.postInfo.id}).then(res => {
+          axios.get(`/api/posts/${this.id}.json`).then(res => {
+            this.postInfo = res.data;
+            this.comments = this.postInfo.comments
+            this.comment = ''
+          })
+        })
+      },
+      deleteComment(comment_id){
+        axios.delete(`/api/comments/${comment_id}`).then(res => {
+          var comments = this.comments
+          comments.some(function(value,index){
+            if (value.comment_id === comment_id){
+              comments.splice(index, 1)
+            }
+          })
+          this.comments = comments
+        })
+      }
     }
   }
 </script>
@@ -100,6 +145,9 @@
 <style scoped>
   .post-wrapper{
     padding: 20px;
+    max-height: 80vh;
+    scroll-behavior: auto;
+    overflow: scroll;
   }
 
   .image{
@@ -139,5 +187,38 @@
 
   .fav{
     color: rgb(253, 108, 108);
+  }
+
+  .comments{
+    width: 80%;
+    margin: 0 auto;
+    font-size: 15px;
+  }
+
+  .delete{
+    float: right;
+  }
+
+  .comment-form{
+    position: relative;
+    padding-bottom:20px;
+  }
+
+  .comment-input{
+    width: calc(100% - 6px);
+    float:left;
+    height: 20px;
+    margin-bottom: 20px;
+  }
+
+  .comment-submit{
+    position: absolute;
+    float: right;
+    right:5px;
+    top:3px;
+    border: none;
+  }
+  .comment-submit:focus{
+    outline: 0;
   }
 </style>

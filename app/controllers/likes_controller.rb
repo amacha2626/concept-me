@@ -8,6 +8,7 @@ class LikesController < ApplicationController
 
   def create
     Like.create(post_id: params[:post_id], user_id: params[:user_id])
+    Notification.create(visitor_id: params[:user_id], visited_id: params[:visited_id], post_id: params[:post_id], action: 'like')
   end
 
   def destroy

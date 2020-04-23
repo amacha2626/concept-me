@@ -14,6 +14,7 @@ class RelationshipsController < ApplicationController
   def create
     Relationship.new
     Relationship.create(user_id: params[:user_id], follow_id: params[:follow_id])
+    Notification.create(visitor_id: params[:user_id], visited_id: params[:follow_id], action: 'follow')
   end
 
   def destroy
