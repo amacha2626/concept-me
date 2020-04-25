@@ -61,7 +61,6 @@
         axios.get(`/api/users/${this.userInfo.id}/notification`).then(res => {
           this.notifications = res.data.notifications;
           this.checkedNotification = this.notifications.every(value => value.checked)
-          console.log(this.notifications)
         })
       });
     },

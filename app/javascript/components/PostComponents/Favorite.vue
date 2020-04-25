@@ -1,6 +1,6 @@
 <template>
   <div class="posts">
-    <div class="post" v-for="(post, key) in reversePosts" :key='key' @click="postShow(post.id)">
+    <div class="post" v-for="(post, key) in reversePosts" :key='key' @click="postShow(post.post_id)">
       <img class="img-blur" :src='post.image'>
       <img class="main-img" :src='post.image'>
     </div>
@@ -29,15 +29,15 @@ export default {
   mounted: function() {
     axios.get(`/likes.json`).then(res => {
       this.allFavorite = res.data.likes
-      console.log(this.allFavorite)
       axios.get(`api/users.json`).then(res => {
         this.allUsers = res.data.users;
         this.userInfo = this.allUsers.find(item => item.email === atob(this.$store.state.user_email)) 
         for(var i = 0; i < this.allFavorite.length; i++){
           if(this.allFavorite[i].user_id === this.userInfo.id){
-            this.posts.push(this.allFavorite[i].post)
+            this.posts.push(this.allFavorite[i])
           }
         }
+        
       })
     })
   },

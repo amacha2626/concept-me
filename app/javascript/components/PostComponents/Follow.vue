@@ -32,10 +32,11 @@ export default {
       this.userInfo = this.allUser.find(item => item.email === atob(this.$store.state.user_email)) 
         axios.get(`/relationships.json`).then(response => {
           this.allRelation = response.data.relationships
-          console.log(this.userInfo)
           for(var i = 0; i < this.allRelation.length; i++) {
             if(this.allRelation[i].user_id === this.userInfo.id){
-              this.currentUserRelationImage.push(this.allRelation[i].follow_post);
+              for(var index = 0; index < this.allRelation[i].posts.length; index++) {
+                this.currentUserRelationImage.push(this.allRelation[i].posts[index]);
+              }
             }
           }
           this.posts = this.currentUserRelationImage.flat()
