@@ -6,13 +6,24 @@
       </div>
       <ul class="header-item menu">
         <li><router-link to="/user">{{ userInfo.name }}</router-link></li>
-        <li><a href="/" @click="signOut">SignOut</a></li>
+        <li><span class="signout" @click="signOut">SignOut</span></li>
         <li><i @click="postShow" class="far fa-comment-dots"></i></li>
         <li class="notification-list">
-          <i v-click-outside="hide" @click="showNotification = !showNotification" class="far fa-bell">
+          <i v-click-outside="hide" @click="notificationShow" class="far fa-bell">
             <i v-if="!checkedNotification" class="fa fa-circle"></i>
           </i>
-          <div v-if="showNotification" class="notifications-wrapper"><p>dog</p></div>
+          <div v-if="showNotification" class="notifications-wrapper">
+            <div v-for="(notification, index) in notifications" :key='index' class="notification">
+              <hr v-if="index > 0">
+              <div :class="{notChecked: !notification.checked}">
+                {{ insertNotification(notification) }}
+                <p class="notificationInfo">{{ insertNotificationInfo(notification) }}</p>
+                <p class="text-right">
+                  {{ notification.time }}
+                </p>
+              </div>
+            </div>
+          </div>
         </li>
       </ul>
     </header>
@@ -49,7 +60,8 @@
         this.userInfo = this.allUser.find(item => item.email === atob(this.$store.state.user_email)) 
         axios.get(`/api/users/${this.userInfo.id}/notification`).then(res => {
           this.notifications = res.data.notifications;
-          this.checkedNotification = this.notifications.some(value => value.checked)
+          this.checkedNotification = this.notifications.every(value => value.checked)
+          console.log(this.notifications)
         })
       });
     },
@@ -59,21 +71,45 @@
     },
     methods: {
       signOut() {
-        this.$http.secured.delete(`/api/signin`)
-          .then(response => {
+        this.$http.secured.delete(`/api/signin`).then(response => {
             delete localStorage.csrf
             delete localStorage.signedIn
             delete localStorage.Vuex
             this.$store.dispatch('doDeleteEmail')
-            this.$router.go('/home')
+            this.$router.push('/home')
           })
           .catch(error => this.setError(error, 'Cannot sign out'))
       },
       postShow() {
         this.$modal.show("new-post");
       },
+      notificationShow(){
+        this.showNotification = !this.showNotification
+        axios.patch(`/api/users/${this.userInfo.id}/notification`).then(res => {
+          this.checkedNotification = true
+        })
+      },
       hide(){
         this.showNotification = false
+        axios.get(`/api/users/${this.userInfo.id}/notification`).then(res => {
+          this.notifications = res.data.notifications;
+        })
+      },
+      insertNotification(notification){
+        switch(notification.action){
+          case 'like':
+            return `${notification.visitor.name}さんが${notification.post.title}にいいねしました`;
+          case 'comment':
+            return `${notification.visitor.name}さんが${notification.post.title}にコメントしました`;
+          case 'follow':
+            return `${notification.visitor.name}さんからフォローされました`;
+        }
+      },
+      insertNotificationInfo(notification){
+        switch(notification.action){
+          case 'comment':
+            return `${notification.comment.content}`;
+        }
       }
     },
     directives: {
@@ -107,6 +143,10 @@
     padding-left: 20%;
   }
 
+  .title a{
+      width: 109px;
+    }
+
   .menu{
     display:flex;
     list-style-type: none;
@@ -127,6 +167,10 @@
     cursor: pointer;
   }
 
+  .signout{
+    cursor: pointer;
+  }
+
   .fa-bell{
     position: relative;
     top: 0;
@@ -144,18 +188,37 @@
     right: 0;
   }
 
-  .notification-list{
-    position: relative;
-  }
-
   .notifications-wrapper{
     position: absolute;
     background-color: #fff;
-    height: 500px;
-    width: 200px;
-    left: 0;
+    right: 0;
     border: 1px solid #696969;
-    border-radius: 10px;
+    border-radius: 5px;
+    line-height: initial;
+    box-shadow:1px 0px 10px -3px #878787;
+  }
+
+  .notifications-wrapper hr{
+    margin: 0;
+  }
+
+  .notification div{
+    width: 300px;
+    padding: 0 10px;
+  }
+
+  .notificationInfo{
+    color: #afafaf;
+  }
+
+  .text-right{
+    color: #afafaf;
+    text-align: right;
+  }
+
+  .notChecked{
+    background-color: rgb(247, 247, 247);
+    border-radius: 5px;
   }
   
 </style>

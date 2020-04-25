@@ -62,7 +62,7 @@ export default new VueRouter({
       path: '/home',
       component: SignOutTop,
       beforeEnter(to, from, next){
-        if (!store.state.signedIn){
+        if (!localStorage.signedIn){
           next();
         } else {
           next('/contents')

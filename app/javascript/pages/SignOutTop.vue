@@ -16,6 +16,6 @@
       SignOutHeader,
       Footer,
       MainContents
-    }
+    },
   }
 </script>

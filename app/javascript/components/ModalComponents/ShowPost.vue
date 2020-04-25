@@ -119,7 +119,7 @@
       postComment(){
         axios.post(`/api/comments`,{
                     comment: { content: this.comment, user_id: this.userInfo.id, post_id: this.id },
-                    visitor_id: this.postInfo.user_id, visited_id: this.userInfo.id, post_id: this.postInfo.id}).then(res => {
+                    visitor_id: this.userInfo.id, visited_id: this.postInfo.user_id, post_id: this.postInfo.id}).then(res => {
           axios.get(`/api/posts/${this.id}.json`).then(res => {
             this.postInfo = res.data;
             this.comments = this.postInfo.comments
