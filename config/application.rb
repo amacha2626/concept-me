@@ -29,6 +29,7 @@ module ConceptMe
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+    config.time_zone = 'Tokyo'
 
     config.generators do |g|
       g.assets false
