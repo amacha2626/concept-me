@@ -51,7 +51,7 @@ export default {
   data: function(){
     return {
       activeComponent: "Popular",
-      signedIn: localStorage.signedIn
+      // signedIn: localStorage.signedIn
     }
   },
   methods: {
