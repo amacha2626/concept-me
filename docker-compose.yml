@@ -15,6 +15,7 @@ services:
       - db_data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: pass
+    command: mysqld --skip-grant-tables --skip-networking
   app:
     build:
       context: .
