@@ -14,7 +14,7 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: suruzen5
+      MYSQL_ROOT_PASSWORD: pass
   app:
     build:
       context: .
