@@ -1,6 +1,4 @@
 class Api::PostsController < ApplicationController
-  # delete
-
   protect_from_forgery :except => [:create]
 
   def index
