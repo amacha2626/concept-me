@@ -11,8 +11,8 @@ services:
     image: mysql:5.7
     ports:
       - 3300:3306
-    # volumes:
-    #   - db_data:/var/lib/mysql
+    volumes:
+      - db_data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: <%= ENV['DATABASE_PASSWORD'] %>
   app:
