@@ -4,6 +4,7 @@
   "dependencies": {
     "@rails/webpacker": "4.2.2",
     "axios": "^0.19.2",
+    "babel-loader": "^8.1.0",
     "css-loader": "*",
     "vue": "^2.6.11",
     "vue-axios": "^2.1.5",
