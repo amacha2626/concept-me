@@ -15,7 +15,7 @@ RUN apk update && \
     ${BUILD_PACKAGE} \
     ${FAVORITE_PACKAGE}
 
-WORKDIR /app
+WORKDIR /app/
 
 COPY Gemfile \
      Gemfile.lock \
