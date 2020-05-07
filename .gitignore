@@ -17,7 +17,7 @@
 /storage/*
 !/storage/.keep
 
-/app/node_modules
+/node_modules
 /yarn-error.log
 
 /public/assets
@@ -28,7 +28,7 @@
 
 /public/packs
 /public/packs-test
-/app/node_modules
+node_modules
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
