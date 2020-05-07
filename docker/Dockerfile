@@ -29,3 +29,5 @@ RUN yarn install
 
 # https://github.com/bundler/bundler/issues/6154
 ENV BUNDLE_GEMFILE='/app/Gemfile'
+
+RUN mkdir -p tmp/sockets
