@@ -25,8 +25,6 @@ COPY Gemfile \
 
 RUN bundle install --jobs=4
 
-RUN bundle exec rake assets:precompile RAILS_ENV=production
-
 RUN yarn install
 
 # https://github.com/bundler/bundler/issues/6154
