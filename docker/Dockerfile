@@ -25,7 +25,8 @@ COPY Gemfile \
 
 RUN bundle install --jobs=4
 
-RUN yarn install
+RUN SECRET_KEY_BASE=placeholder bundle exec rails assets:precompile \
+    && yarn install
 
 # https://github.com/bundler/bundler/issues/6154
 ENV BUNDLE_GEMFILE='/app/Gemfile'
