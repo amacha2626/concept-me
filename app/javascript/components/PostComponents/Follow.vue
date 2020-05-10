@@ -27,7 +27,7 @@ export default {
     }
   },
   created: function() {
-    axios.get(`api/users.json`).then(res => {
+    axios.get(`/api/users.json`).then(res => {
       this.allUser = res.data.users;
       this.userInfo = this.allUser.find(item => item.email === atob(this.$store.state.user_email)) 
         axios.get(`/relationships.json`).then(response => {

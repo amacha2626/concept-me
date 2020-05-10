@@ -6,7 +6,7 @@
       </div>
       <p class="title">{{ postInfo.title }}</p>
       <hr>
-      <p class="user-name">{{postInfo.user_name}}</p>
+      <p class="user-name" @click="reload"><router-link :to="`/user/${postInfo.user_id}`">{{postInfo.user_name}}</router-link></p>
       <div v-if="signedIn" class="btn">
         <button v-if="!currentUser && !followOfState" @click="follow" class="follow">Follow</button>
         <button v-if="!currentUser && followOfState" @click="unfollow" class="follow">UnFollow</button>
@@ -61,7 +61,7 @@
         this.postInfo = res.data;
         this.comments = this.postInfo.comments
         if(localStorage.signedIn){
-          axios.get(`api/users.json`).then(res => {
+          axios.get(`/api/users.json`).then(res => {
             this.allUser = res.data.users;
             this.userInfo = this.allUser.find(item => item.email === atob(this.$store.state.user_email)) 
             if(this.postInfo.user_id == this.userInfo.id){
@@ -80,6 +80,7 @@
               if( this.favoriteData ){
                 this.favoriteOfState = true
               }
+              console.log(this.postInfo)
             })
           });
         }
@@ -137,7 +138,10 @@
           })
           this.comments = comments
         })
-      }
+      },
+      reload() {
+        this.$router.go({path: this.$router.currentRoute.path, force: true});
+      },
     }
   }
 </script>

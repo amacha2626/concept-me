@@ -1,7 +1,11 @@
 <template>
   <div class="main-wrapper">
     <div class="profile">
-      {{ userInfo.name }}
+      <p>{{ selectUserInfo.name }}</p>
+      <div class="follow-wrapper">
+        <p><span>{{followCount}}</span>follow</p>
+        <p><span>{{followerCount}}</span>follower</p>
+      </div>
       <hr>
     </div>
     <div class="posts">
@@ -26,14 +30,21 @@
       return {
         allUser: [],
         userInfo: {},
+        selectUserInfo: {},
         posts: [],
-        post_id: ''
+        post_id: '',
+        followCount: 1,
+        followerCount: 2
       }
     },
     created: function() {
-      axios.get(`api/users.json`).then(res => {
+      axios.get(`/api/users.json`).then(res => {
         this.allUser = res.data.users;
         this.userInfo = this.allUser.find(item => item.email === atob(this.$store.state.user_email)) 
+      });
+      axios.get(`/api/users/${this.$route.params.id}.json`).then(res => {
+        this.selectUserInfo = res.data;
+        console.log(this.selectUserInfo)
       });
     },
     mounted: function() {
@@ -43,7 +54,7 @@
       fetchPosts() {
         axios.get('/api/posts').then(res => {
           for(var i = 0; i < res.data.posts.length; i++) {
-            if(res.data.posts[i].user_id === this.userInfo.id) {
+            if(res.data.posts[i].user_id === this.selectUserInfo.id) {
               this.posts.push(res.data.posts[i]);
             }
           }
@@ -143,5 +154,20 @@
   .post:hover::after {
     transform: scale(.1, 1);
     opacity: 0;
+  }
+
+  .follow-wrapper{
+    margin-top: 10px;
+    font-size: 11px;
+  }
+
+  .follow-wrapper p{
+    margin: 0 5px;
+    display: inline;
+  }
+
+  .follow-wrapper span{
+    font-size: 15px;
+    margin-right: 3px;
   }
 </style>
