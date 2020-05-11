@@ -68,7 +68,6 @@
     methods: {
       fetchPosts() {
         axios.get('/api/posts').then(res => {
-          console.log(this.userInfo)
           for(var i = 0; i < res.data.posts.length; i++) {
             if(res.data.posts[i].user_id === this.userInfo.id) {
               this.posts.push(res.data.posts[i]);
