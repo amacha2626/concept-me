@@ -62,14 +62,13 @@
         this.userInfo = this.allUser.find(item => item.email === atob(this.$store.state.user_email)) 
         this.followCount = this.userInfo.followings.length
         this.followerCount = this.userInfo.followers.length
+        this.fetchPosts();
       });
-    },
-    mounted: function() {
-      this.fetchPosts();
     },
     methods: {
       fetchPosts() {
         axios.get('/api/posts').then(res => {
+          console.log(this.userInfo)
           for(var i = 0; i < res.data.posts.length; i++) {
             if(res.data.posts[i].user_id === this.userInfo.id) {
               this.posts.push(res.data.posts[i]);
