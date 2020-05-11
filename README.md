@@ -15,7 +15,7 @@ http://concept-me.net/
 <img src="https://i.gyazo.com/e4f6064713861c7091faca5ac9bc7d9c.png">
 <img src="https://i.gyazo.com/107ea098e3cc795354e737bc2eeb30e6.jpg">
 
-###　主な機能
+### 主な機能
 - ユーザー登録・ログイン機能
 - 画像投稿機能
 - 人気、最新、フォロー、お気に入り別の投稿閲覧機能
@@ -61,7 +61,7 @@ http://concept-me.net/
 - Git
   - GitHub
 
-###　今後の課題
+### 今後の課題
 - Redisを利用する事でユーザー認証を実装したが、その後理解力不足でステートフルな認証を実装出来なかった。
 - 投稿された画像のローカルへの保存が正常に行えず、ActiveStorageを利用し保存している。
 - 上記に付随して、画像のS3へのアップロードを実装出来ていない。
