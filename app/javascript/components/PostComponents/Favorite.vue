@@ -29,7 +29,7 @@ export default {
   mounted: function() {
     axios.get(`/likes.json`).then(res => {
       this.allFavorite = res.data.likes
-      axios.get(`api/users.json`).then(res => {
+      axios.get(`/api/users.json`).then(res => {
         this.allUsers = res.data.users;
         this.userInfo = this.allUsers.find(item => item.email === atob(this.$store.state.user_email)) 
         for(var i = 0; i < this.allFavorite.length; i++){

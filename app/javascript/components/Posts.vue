@@ -51,7 +51,7 @@ export default {
   data: function(){
     return {
       activeComponent: "Popular",
-      // signedIn: localStorage.signedIn
+      signedIn: localStorage.signedIn
     }
   },
   methods: {
@@ -59,9 +59,9 @@ export default {
       this.activeComponent = component;
     }
   },
-  computed: mapState([
-    'signedIn'
-  ])
+  // computed: mapState([
+  //   'signedIn'
+  // ])
 }
 </script>
 

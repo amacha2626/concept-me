@@ -6,7 +6,7 @@
       </div>
       <p class="title">{{ postInfo.title }}</p>
       <hr>
-      <p class="user-name">{{postInfo.user_name}}</p>
+      <p class="user-name"><router-link :to="`/user/${postInfo.user_id}`">{{postInfo.user_name}}</router-link></p>
       <div v-if="signedIn" class="btn">
         <button v-if="!currentUser && !followOfState" @click="follow" class="follow">Follow</button>
         <button v-if="!currentUser && followOfState" @click="unfollow" class="follow">UnFollow</button>
@@ -16,7 +16,7 @@
       <div class="comments">
         <hr>
         <div class="comment" v-for="(comment, key) in comments" :key='key'>
-          {{ comment.comment_user.name }}
+          <router-link :to="`/user/${comment.comment_user.id}`">{{ comment.comment_user.name }}</router-link>
           -
           {{ comment.comment_content }}
           <span class="delete" @click="deleteComment(comment.comment_id)" v-if="userInfo.id === comment.comment_user.id">×</span>
@@ -61,7 +61,7 @@
         this.postInfo = res.data;
         this.comments = this.postInfo.comments
         if(localStorage.signedIn){
-          axios.get(`api/users.json`).then(res => {
+          axios.get(`/api/users.json`).then(res => {
             this.allUser = res.data.users;
             this.userInfo = this.allUser.find(item => item.email === atob(this.$store.state.user_email)) 
             if(this.postInfo.user_id == this.userInfo.id){
@@ -87,34 +87,31 @@
     },
     methods: {
       follow(){
-        axios.post(`/relationships`, {user_id: this.userInfo.id, follow_id: this.postInfo.user_id}).then((res) => {
-          this.followOfState = true
-        })
+        this.followOfState = true
+        axios.post(`/relationships`, {user_id: this.userInfo.id, follow_id: this.postInfo.user_id})
       },
       unfollow(){
+        this.followOfState = false
         axios.get(`/relationships.json`).then(res => {
           this.allRelationships = res.data.relationships
           this.followData = this.allRelationships.find(item => item.user_id === this.userInfo.id && item.follow_id === this.postInfo.user_id)
         })
-        axios.delete(`/relationships/${this.followData.id}`).then((res) => {
-          this.followOfState = false
-        })
+        axios.delete(`/relationships/${this.followData.id}`)
       },
       isFavorite() {
+        this.favoriteOfState = true
         axios.post(`/likes`, {
                     post_id: this.postInfo.id, user_id: this.userInfo.id,
                     visited_id: this.postInfo.user_id,}).then((res) => {
-          this.favoriteOfState = true
         })
       },
       removeFavorite() {
+        this.favoriteOfState = false
         axios.get(`/likes.json`).then(res => {
           this.allFavorite = res.data.likes
           this.favoriteData = this.allFavorite.find(item => item.user_id === this.userInfo.id && item.post_id === this.postInfo.is)
         })
-        axios.delete(`/likes/${this.favoriteData.id}`).then(res => {
-          this.favoriteOfState = false
-        })
+        axios.delete(`/likes/${this.favoriteData.id}`)
       },
       postComment(){
         axios.post(`/api/comments`,{
@@ -137,7 +134,7 @@
           })
           this.comments = comments
         })
-      }
+      },
     }
   }
 </script>
@@ -183,10 +180,15 @@
   .follow{
     width: 100px;
     margin-right: 10px;
+    cursor: pointer;
   }
 
   .fav{
     color: rgb(253, 108, 108);
+  }
+
+  .fa-heart{
+    cursor: pointer;
   }
 
   .comments{

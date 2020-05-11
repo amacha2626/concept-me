@@ -2,10 +2,12 @@ Rails.application.routes.draw do
   root to: 'home#index'
 
   get 'home', controller: :home, action: :index
+  get 'user', controller: :home, action: :index
+  get 'user/:id', controller: :home, action: :index
   resources :relationships, only: [:index, :show, :create, :destroy]
   resources :likes, only: [:index, :create, :destroy]
   namespace :api do
-    resources :users, only: [:index] do
+    resources :users, only: [:index, :show] do
       member do
         get 'notification', controller: :notifications, action: :index
         patch 'notification', controller: :notifications, action: :update
