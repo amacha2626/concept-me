@@ -16,7 +16,7 @@
       <div class="comments">
         <hr>
         <div class="comment" v-for="(comment, key) in comments" :key='key'>
-          {{ comment.comment_user.name }}
+          <router-link :to="`/user/${comment.comment_user.id}`">{{ comment.comment_user.name }}</router-link>
           -
           {{ comment.comment_content }}
           <span class="delete" @click="deleteComment(comment.comment_id)" v-if="userInfo.id === comment.comment_user.id">×</span>

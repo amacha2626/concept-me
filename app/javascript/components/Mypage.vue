@@ -1,19 +1,37 @@
 <template>
   <div class="main-wrapper">
     <div class="profile">
-      <p>{{ userInfo.name }}</p>
+      <div class="username">
+        <span @click="isSelect('posts')">{{ userInfo.name }}</span>
+      </div>
       <div class="follow-wrapper">
-        <p><span>{{followCount}}</span>follow</p>
-        <p><span>{{followerCount}}</span>follower</p>
+        <div @click="isSelect('follow')"><span>{{followCount}}</span>follow</div>
+        <div @click="isSelect('follower')"><span>{{followerCount}}</span>follower</div>
       </div>
       <hr>
     </div>
-    <div class="posts">
+    <div class="posts" v-if="activeView === 'posts'">
       <div class="post" v-for="(post, key) in posts" :key='key' @click="postShow(post.id)">
         <img class="img-blur" :src='post.image'>
         <img class="main-img" :src='post.image'>
       </div>
       <modal name="show-post" height="auto"><ShowPost :id="post_id"></ShowPost></modal>
+    </div>
+    <div class="follow-lists follow" v-if="activeView === 'follow'">
+      <p>Follow</p>
+      <div class="lists" v-for="(follow, key) in userInfo.followings" :key='key'>
+        <div class=list>
+          <router-link :to="`/user/${follow.id}`">{{ follow.name }}</router-link>
+        </div>
+      </div>
+    </div>
+    <div class="follow-lists follower" v-if="activeView === 'follower'">
+      <p>Follower</p>
+      <div class="lists" v-for="(follower, key) in userInfo.followers" :key='key'>
+        <div class="list">
+          <router-link :to="`/user/${follower.id}`">{{ follower.name }}</router-link>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -34,7 +52,8 @@
         posts: [],
         post_id: '',
         followCount: '',
-        followerCount: ','
+        followerCount: ',',
+        activeView: 'posts'
       }
     },
     created: function() {
@@ -63,7 +82,10 @@
       postShow(key){
         this.post_id = key
         this.$modal.show("show-post")
-      }
+      },
+      isSelect(view){
+        this.activeView = view;
+      },
     }
   }
 </script>
@@ -154,18 +176,40 @@
     opacity: 0;
   }
 
+  .username{
+    cursor: pointer;
+  }
+
+  .username :hover{
+    border-bottom: 0.5px solid #696969;
+  }
+
   .follow-wrapper{
     margin-top: 10px;
     font-size: 11px;
   }
 
-  .follow-wrapper p{
+  .follow-wrapper div{
     margin: 0 5px;
     display: inline;
+    cursor: pointer;
+  }
+
+  .follow-wrapper :hover{
+    border-bottom: 0.5px solid #696969;
   }
 
   .follow-wrapper span{
     font-size: 15px;
     margin-right: 3px;
+  }
+
+  .follow-lists{
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .list{
+    margin-top: 15px;
   }
 </style>
