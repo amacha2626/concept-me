@@ -1,10 +1,11 @@
 import Vue          from 'vue'
 import VueRouter    from 'vue-router'
 import SignInTop    from '../pages/SignInTop'
-import SignOutTop    from '../pages/SignOutTop'
-import Posts    from '../components/Posts'
-import Mypage    from '../components/Mypage'
-import store from '../store/store.js'
+import SignOutTop   from '../pages/SignOutTop'
+import Posts        from '../components/Posts'
+import Mypage     from '../components/Mypage'
+import UserInfo     from '../components/UserInfo'
+import store        from '../store/store.js'
 
 
 Vue.use(VueRouter)
@@ -46,8 +47,9 @@ export default new VueRouter({
           }
         },
         {
+          name: 'user',
           path: '/user/:id',
-          component: Mypage,
+          component: UserInfo,
           beforeEnter(to, from, next){
             if (store.state.signedIn){
               next();

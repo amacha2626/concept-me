@@ -1,8 +1,8 @@
 <template>
   <div class="main-wrapper">
     <div class="profile">
-      <div class="username">
-        <span @click="isSelect('posts')">{{ userInfo.name }}</span>
+      <div class="username" @click="isSelect('posts')">
+        <span>{{ selectUserInfo.name }}</span>
       </div>
       <div class="follow-wrapper">
         <div @click="isSelect('follow')"><span>{{followCount}}</span>follow</div>
@@ -19,16 +19,16 @@
     </div>
     <div class="follow-lists follow" v-if="activeView === 'follow'">
       <p>Follow</p>
-      <div class="lists" v-for="(follow, key) in userInfo.followings" :key='key'>
-        <div class=list>
+      <div class="lists" v-for="(follow, key) in selectUserInfo.follow" :key='key'>
+        <div class=list @click="reload">
           <router-link :to="`/user/${follow.id}`">{{ follow.name }}</router-link>
         </div>
       </div>
     </div>
     <div class="follow-lists follower" v-if="activeView === 'follower'">
       <p>Follower</p>
-      <div class="lists" v-for="(follower, key) in userInfo.followers" :key='key'>
-        <div class="list">
+      <div class="lists" v-for="(follower, key) in selectUserInfo.follower" :key='key'>
+        <div class="list" @click="reload">
           <router-link :to="`/user/${follower.id}`">{{ follower.name }}</router-link>
         </div>
       </div>
@@ -52,7 +52,7 @@
         posts: [],
         post_id: '',
         followCount: '',
-        followerCount: ',',
+        followerCount: '',
         activeView: 'posts'
       }
     },
@@ -60,8 +60,11 @@
       axios.get(`/api/users.json`).then(res => {
         this.allUser = res.data.users;
         this.userInfo = this.allUser.find(item => item.email === atob(this.$store.state.user_email)) 
-        this.followCount = this.userInfo.followings.length
-        this.followerCount = this.userInfo.followers.length
+      });
+      axios.get(`/api/users/${this.$route.params.id}.json`).then(res => {
+        this.selectUserInfo = res.data;
+        this.followCount = this.selectUserInfo.follow.length
+        this.followerCount = this.selectUserInfo.follower.length
       });
     },
     mounted: function() {
@@ -71,7 +74,7 @@
       fetchPosts() {
         axios.get('/api/posts').then(res => {
           for(var i = 0; i < res.data.posts.length; i++) {
-            if(res.data.posts[i].user_id === this.userInfo.id) {
+            if(res.data.posts[i].user_id === this.selectUserInfo.id) {
               this.posts.push(res.data.posts[i]);
             }
           }
@@ -85,6 +88,9 @@
       },
       isSelect(view){
         this.activeView = view;
+      },
+      reload() {
+        this.$router.go({path: this.$router.currentRoute.path, force: true});
       },
     }
   }

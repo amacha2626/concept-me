@@ -2,7 +2,7 @@
   <div id="header">
     <header>
       <div class="header-item title">
-        <p><a href="/">CONCEPT ME</a></p>
+        <p><router-link to="/">CONCEPT ME</router-link></p>
       </div>
       <ul class="header-item menu">
         <li><router-link to="/user">{{ userInfo.name }}</router-link></li>
@@ -16,6 +16,7 @@
             <div v-for="(notification, index) in notifications" :key='index' class="notification">
               <hr v-if="index > 0">
               <div :class="{notChecked: !notification.checked}">
+                <router-link :to="`/user/${notification.visitor.id}`">{{notification.visitor.name}}</router-link>
                 {{ insertNotification(notification) }}
                 <p class="notificationInfo">{{ insertNotificationInfo(notification) }}</p>
                 <p class="text-right">
@@ -50,15 +51,15 @@
         allUser: [],
         userInfo: {},
         notifications: [],
-        checkedNotification: '',
+        checkedNotification: true,
         showNotification: false,
       }
     },
     created: function() {
-      axios.get(`api/users.json`).then(res => {
+      axios.get(`/api/users.json`).then(res => {
         this.allUser = res.data.users;
         this.userInfo = this.allUser.find(item => item.email === atob(this.$store.state.user_email)) 
-        axios.get(`/api/users/${this.userInfo.id}/notification`).then(res => {
+        axios.get(`/api/users/${this.userInfo.id}/notification.json`).then(res => {
           this.notifications = res.data.notifications;
           this.checkedNotification = this.notifications.every(value => value.checked)
         })
@@ -90,18 +91,18 @@
       },
       hide(){
         this.showNotification = false
-        axios.get(`/api/users/${this.userInfo.id}/notification`).then(res => {
+        axios.get(`/api/users/${this.userInfo.id}/notification.json`).then(res => {
           this.notifications = res.data.notifications;
         })
       },
       insertNotification(notification){
         switch(notification.action){
           case 'like':
-            return `${notification.visitor.name}さんが${notification.post.title}にいいねしました`;
+            return `さんが${notification.post.title}にいいねしました`;
           case 'comment':
-            return `${notification.visitor.name}さんが${notification.post.title}にコメントしました`;
+            return `さんが${notification.post.title}にコメントしました`;
           case 'follow':
-            return `${notification.visitor.name}さんからフォローされました`;
+            return `さんからフォローされました`;
         }
       },
       insertNotificationInfo(notification){
@@ -109,7 +110,7 @@
           case 'comment':
             return `${notification.comment.content}`;
         }
-      }
+      },
     },
     directives: {
       ClickOutside
@@ -204,6 +205,10 @@
   .notification div{
     width: 300px;
     padding: 0 10px;
+  }
+
+  .notification a{
+    text-decoration: underline;
   }
 
   .notificationInfo{
