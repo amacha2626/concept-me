@@ -44,16 +44,6 @@ services:
     volumes:
       - redis_data:/data
     stdin_open: true
-  nginx:
-    build:
-      context: containers/nginx
-    volumes:
-      - ./public-data:/concept-me/public
-      - ./tmp-data:/concept-me/tmp
-    ports:
-      - 80:80
-    depends_on:
-      - app
 volumes:
   db_data:
   redis_data:
