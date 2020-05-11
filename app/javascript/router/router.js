@@ -3,6 +3,7 @@ import VueRouter    from 'vue-router'
 import SignInTop    from '../pages/SignInTop'
 import SignOutTop   from '../pages/SignOutTop'
 import Posts        from '../components/Posts'
+import Mypage     from '../components/Mypage'
 import UserInfo     from '../components/UserInfo'
 import store        from '../store/store.js'
 
@@ -26,6 +27,17 @@ export default new VueRouter({
         {
           path: '/',
           component: Posts,
+          beforeEnter(to, from, next){
+            if (store.state.signedIn){
+              next();
+            } else {
+              next('/home')
+            }
+          }
+        },
+        {
+          path: '/user',
+          component: Mypage,
           beforeEnter(to, from, next){
             if (store.state.signedIn){
               next();

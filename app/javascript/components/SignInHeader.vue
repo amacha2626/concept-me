@@ -2,10 +2,10 @@
   <div id="header">
     <header>
       <div class="header-item title">
-        <p><a href="/">CONCEPT ME</a></p>
+        <p><router-link to="/">CONCEPT ME</router-link></p>
       </div>
       <ul class="header-item menu">
-        <li @click="reload"><router-link :to="`/user/${userInfo.id}`">{{ userInfo.name }}</router-link></li>
+        <li><router-link to="/user">{{ userInfo.name }}</router-link></li>
         <li><span class="signout" @click="signOut">SignOut</span></li>
         <li><i @click="postShow" class="far fa-comment-dots"></i></li>
         <li class="notification-list">
@@ -58,7 +58,7 @@
       axios.get(`/api/users.json`).then(res => {
         this.allUser = res.data.users;
         this.userInfo = this.allUser.find(item => item.email === atob(this.$store.state.user_email)) 
-        axios.get(`/api/users/${this.userInfo.id}/notification`).then(res => {
+        axios.get(`/api/users/${this.userInfo.id}/notification.json`).then(res => {
           this.notifications = res.data.notifications;
           this.checkedNotification = this.notifications.every(value => value.checked)
         })
@@ -90,7 +90,7 @@
       },
       hide(){
         this.showNotification = false
-        axios.get(`/api/users/${this.userInfo.id}/notification`).then(res => {
+        axios.get(`/api/users/${this.userInfo.id}/notification.json`).then(res => {
           this.notifications = res.data.notifications;
         })
       },
@@ -109,9 +109,6 @@
           case 'comment':
             return `${notification.comment.content}`;
         }
-      },
-      reload() {
-        this.$router.go({path: this.$router.currentRoute.path, force: true});
       },
     },
     directives: {

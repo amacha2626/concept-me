@@ -1,7 +1,11 @@
 <template>
   <div class="main-wrapper">
     <div class="profile">
-      {{ userInfo.name }}
+      <p>{{ userInfo.name }}</p>
+      <div class="follow-wrapper">
+        <p><span>{{followCount}}</span>follow</p>
+        <p><span>{{followerCount}}</span>follower</p>
+      </div>
       <hr>
     </div>
     <div class="posts">
@@ -26,14 +30,19 @@
       return {
         allUser: [],
         userInfo: {},
+        selectUserInfo: {},
         posts: [],
-        post_id: ''
+        post_id: '',
+        followCount: '',
+        followerCount: ','
       }
     },
     created: function() {
-      axios.get(`api/users.json`).then(res => {
+      axios.get(`/api/users.json`).then(res => {
         this.allUser = res.data.users;
         this.userInfo = this.allUser.find(item => item.email === atob(this.$store.state.user_email)) 
+        this.followCount = this.userInfo.followings.length
+        this.followerCount = this.userInfo.followers.length
       });
     },
     mounted: function() {
@@ -143,5 +152,20 @@
   .post:hover::after {
     transform: scale(.1, 1);
     opacity: 0;
+  }
+
+  .follow-wrapper{
+    margin-top: 10px;
+    font-size: 11px;
+  }
+
+  .follow-wrapper p{
+    margin: 0 5px;
+    display: inline;
+  }
+
+  .follow-wrapper span{
+    font-size: 15px;
+    margin-right: 3px;
   }
 </style>

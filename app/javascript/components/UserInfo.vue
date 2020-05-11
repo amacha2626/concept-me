@@ -44,7 +44,6 @@
       });
       axios.get(`/api/users/${this.$route.params.id}.json`).then(res => {
         this.selectUserInfo = res.data;
-        console.log(this.selectUserInfo)
         this.followCount = this.selectUserInfo.follow.length
         this.followerCount = this.selectUserInfo.follower.length
       });
