@@ -74,6 +74,7 @@
     width: 300px;
     border:1px dashed #696969;
     object-fit: contain;
+    cursor: pointer;
   }
 
   .image-form{
