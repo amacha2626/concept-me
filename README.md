@@ -1,24 +1,72 @@
-# README
+# Concept Me
+***あなたの日常の全てにコンセプトを***  
+- ConceptMeはユーザーの日常生活の一場面に対して、20文字以内の短いコンセプトを添えて投稿してもらう画像投稿型SNSアプリケーションです。
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Why
+- Youtuberやインスタグラマーなどの所謂インフルエンサーと呼ばれる方が台頭し、社会全体が個人にフォーカスされる時代になっている事から着想を得ました。
+- 個人の生活や生き方に対してファンがつく時代では、生活それ自体が従来の企業が提供していた企業ブランドや商品・サービスに直結すると考えられます。しかし、多くの企業はそれらを独自のコンセプトを持った上で消費者に提供してきたのに対して、個人としての生き方にコンセプトを持って自分をプロデュースしている人はあまり多くないように感じました。
+- そこで、投稿する画像に少しのコンセプトを添える事で従来の画像投稿アプリとは違い、一つ一つの投稿をクリックしてみたくなる様な、個人の時代を後押しするアプリケーションを目指しました。
 
-Things you may want to cover:
+### リンク
+http://concept-me.net/
 
-* Ruby version
+- トップページ右上のGuestをクリックして頂くことで、ゲストユーザーとして一通りの機能が利用可能となります。
 
-* System dependencies
+<img src="https://i.gyazo.com/e4f6064713861c7091faca5ac9bc7d9c.png">
+<img src="https://i.gyazo.com/107ea098e3cc795354e737bc2eeb30e6.jpg">
 
-* Configuration
+### 主な機能
+- ユーザー登録・ログイン機能
+- 画像投稿機能
+- 人気、最新、フォロー、お気に入り別の投稿閲覧機能
+- フォロー機能
+- コメント機能
+- コメント削除機能
+- いいね機能
+- フォロー、コメント、いいねされた際の通知機能
+- 投稿詳細ページ
+- ユーザー詳細ページ
 
-* Database creation
+### 工夫した点
+- フロントサイドにVue.js,サーバーサイドにRailsを使用する事でSPAを実装している点
+- Vue.js,Rails,Redisの3つのアプリケーションをDocker環境で開発、デプロイしている点
+- AWS EC2内でDocker環境を構築し、Route53から独自ドメインを取得した上でデプロイしている点
+- 直感的に操作が可能なシンプルなUIを意識し、実装している点
 
-* Database initialization
+### 使用技術
+- Ruby 2.7.0
+  - Rails 5.2.4
+  - 使用gem
+    - webpacker
+    - jbuilder
+    - bcrypt
+    - redis
+    - pry-rails
+    - foreman
+- Mysql2
+- Redis
+- Vue.js
+  -　使用ライブラリ
+    - vue-router
+    - Vuex
+    - vue-axios
+    - vue-js-modal
+    - vue-click-outside
+- AWS
+  - EC2
+  - IAM
+  - Route53
+- Docker
+  - docker-compose
+- Git
+  - GitHub
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+### 今後の課題
+- Redisを利用する事でユーザー認証を実装したが、その後理解力不足でステートフルな認証を実装出来なかった。
+- 投稿された画像のローカルへの保存が正常に行えず、ActiveStorageを利用し保存している。
+- 上記に付随して、画像のS3へのアップロードを実装出来ていない。
+- Dockerを利用したにも関わらず、AWS ECSへのデプロイが出来なかった。
+- ユーザー情報編集、投稿編集機能が実装できていない。
+- リファクタリングが行えておらず、同じ記述が複数存在する。
+- タグ機能が実装できていない。
+- レスポンシブデザインを実装できていない。
