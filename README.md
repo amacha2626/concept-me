@@ -46,7 +46,7 @@ http://concept-me.net/
 - Mysql2
 - Redis
 - Vue.js
-  -　使用ライブラリ
+  - 使用ライブラリ
     - vue-router
     - Vuex
     - vue-axios
