@@ -5,7 +5,7 @@ Rails.application.configure do
 
     config.cache_store = :redis_store, 'redis://3.114.216.97:6379/0/cache'
     config.public_file_server.headers = {
-      'Cache-Control' => "public, max-age=#{2.days.to_i}"
+      'Cache-Control' => "public"
     }
   else
     config.action_controller.perform_caching = false
